@@ -354,8 +354,8 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
 
     if (adjustedX < 0 || adjustedY < 0) return null;
 
-    // 셀 크기 계산 (56px + 4px gap) - w-14 h-14로 변경
-    const cellSize = 60; // w-14 h-14 + gap-1
+    // 셀 크기 계산 (72px + 4px gap) - w-18 h-18로 변경
+    const cellSize = 76; // w-18 h-18 + gap-1
     const col = Math.floor(adjustedX / cellSize);
     const row = Math.floor(adjustedY / cellSize);
 
@@ -628,7 +628,7 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   className={`
-                    w-14 h-14 border border-gray-600 cursor-pointer transition-all duration-150 select-none
+                    w-18 h-18 border border-gray-600 cursor-pointer transition-all duration-150 select-none
                     ${cell.type === "empty" ? "bg-black hover:bg-gray-800" : ""}
                     ${
                       cell.type === "dot"
