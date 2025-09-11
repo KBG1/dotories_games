@@ -80,7 +80,6 @@ function generateFlowFreePuzzle(size: 5 | 6): PuzzleData {
   const colors: Color[] = ["red", "blue", "green", "yellow", "purple", "orange"];
   
   // 계산: 전체 칸 수에서 적절한 색상 개수 결정
-  const totalCells = size * size;
   let numColors: number;
   
   if (size === 5) {
@@ -152,14 +151,14 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
   const [completionTime, setCompletionTime] = useState<number>(0);
   const [completionPercent, setCompletionPercent] = useState<number>(0);
 
-  // 완성도 계산 (채워진 칸 기준)
-  const updateCompletionPercent = () => {
+  // 완성도 계산 (채워진 칸 기준) - useCallback으로 최적화
+  const updateCompletionPercent = React.useCallback(() => {
     const totalCells = size * size;
     const filledCells = gameGrid
       .flat()
       .filter((cell) => cell.type === "dot" || cell.type === "path").length;
     setCompletionPercent(Math.round((filledCells / totalCells) * 100));
-  };
+  }, [size, gameGrid]);
   // 실시간 타이머
   useEffect(() => {
     if (!gameCompleted) {
@@ -188,56 +187,87 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
       document.removeEventListener('touchstart', preventDefault);
     };
   }, [isDrawing]);
-  // 색상 매핑
-  const getColorClass = (color: Color): string => {
-    const colorMap = {
-      red: "bg-red-500",
-      blue: "bg-blue-500",
-      green: "bg-green-500",
-      yellow: "bg-yellow-400",
-      purple: "bg-purple-500",
-      orange: "bg-orange-500",
-    };
-    return colorMap[color];
-  };
 
-  // 드래그 시작 (마우스 + 터치)
-  const handleStart = (row: number, col: number) => {
-    const cell = gameGrid[row][col];
+  // 인접 셀 체크
+  const isAdjacent = React.useCallback((
+    [r1, c1]: [number, number],
+    [r2, c2]: [number, number]
+  ): boolean => {
+    return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1;
+  }, []);
 
-    if (cell.type === "dot" && cell.color) {
-      // 기존 경로 지우기
-      clearPathsForColor(cell.color);
+  // 인접 셀 가져오기
+  const getAdjacentCells = React.useCallback((
+    row: number,
+    col: number
+  ): Array<[number, number]> => {
+    return [
+      [row - 1, col],
+      [row + 1, col],
+      [row, col - 1],
+      [row, col + 1],
+    ].filter(([r, c]) => r >= 0 && r < size && c >= 0 && c < size) as Array<
+      [number, number]
+    >;
+  }, [size]);
 
-      setIsDrawing(true);
-      setCurrentColor(cell.color);
-      setCurrentPath([[row, col]]);
-    }
-  };
+  // 경로 연결 확인 (간단한 버전)
+  const isPathConnected = React.useCallback((
+    dot1: [number, number],
+    dot2: [number, number],
+    color: Color
+  ): boolean => {
+    const [r1, c1] = dot1;
+    const [r2, c2] = dot2;
 
-  const handleMouseDown = (row: number, col: number) => {
-    handleStart(row, col);
-  };
-
-  const handleTouchStart = (row: number, col: number, e: React.TouchEvent) => {
-    handleStart(row, col);
-  };
-
-  // 특정 색상의 모든 경로 지우기
-  const clearPathsForColor = (color: Color) => {
-    const newGrid = gameGrid.map((row) =>
-      row.map((cell) => {
-        if (cell.type === "path" && cell.color === color) {
-          return { type: "empty" as CellType };
-        }
-        return cell;
-      })
+    // 각 점 주변에 같은 색 경로가 있는지 확인
+    const hasPath1 = getAdjacentCells(r1, c1).some(
+      ([r, c]) =>
+        gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
     );
-    setGameGrid(newGrid);
-  };
 
-  // 드래그 중 공통 로직
-  const handleMove = (row: number, col: number) => {
+    const hasPath2 = getAdjacentCells(r2, c2).some(
+      ([r, c]) =>
+        gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
+    );
+
+    return hasPath1 && hasPath2;
+  }, [gameGrid, getAdjacentCells]);
+
+  // 게임 완료 체크
+  const checkGameCompletion = React.useCallback(() => {
+    console.log("게임 완료 체크 중...");
+
+    // 모든 페어가 연결되었는지 확인
+    const connectedCount = puzzleData.pairs.filter((pair) => {
+      const [dot1, dot2] = pair.dots;
+      const connected = isPathConnected(dot1, dot2, pair.color);
+      console.log(`${pair.color} 연결 상태:`, connected);
+      return connected;
+    }).length;
+
+    console.log(`연결된 페어: ${connectedCount}/${puzzleData.pairs.length}`);
+
+    // 모든 셀이 채워졌는지 확인 (Flow Free의 핵심 규칙)
+    const totalCells = size * size;
+    const filledCells = gameGrid.flat().filter(cell => cell.type !== "empty").length;
+    console.log(`채워진 칸: ${filledCells}/${totalCells}`);
+
+    const allConnected = connectedCount === puzzleData.pairs.length;
+    const allFilled = filledCells === totalCells;
+
+    console.log("모든 페어 연결:", allConnected);
+    console.log("모든 칸 채움:", allFilled);
+
+    if (allConnected && allFilled) {
+      console.log("🎉 게임 완료!");
+      setCompletionTime(currentTime);
+      setGameCompleted(true);
+    }
+  }, [puzzleData.pairs, gameGrid, size, currentTime, isPathConnected]);
+
+  // handleMove를 useCallback으로 최적화
+  const handleMove = React.useCallback((row: number, col: number) => {
     if (!isDrawing || !currentColor) return;
 
     const cell = gameGrid[row][col];
@@ -296,6 +326,110 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
         }
       }
     }
+  }, [isDrawing, currentColor, gameGrid, currentPath, checkGameCompletion, isAdjacent]);
+
+  // 색상 매핑
+  const getColorClass = (color: Color): string => {
+    const colorMap = {
+      red: "bg-red-500",
+      blue: "bg-blue-500",
+      green: "bg-green-500",
+      yellow: "bg-yellow-400",
+      purple: "bg-purple-500",
+      orange: "bg-orange-500",
+    };
+    return colorMap[color];
+  };
+
+  // 터치 이벤트를 위한 좌표 계산 (개선된 버전)
+  const getTouchCellPosition = React.useCallback((touch: React.Touch, gridElement: HTMLElement): [number, number] | null => {
+    const rect = gridElement.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    // 패딩 제거 (24px = 6 * 4px)
+    const padding = 24;
+    const adjustedX = x - padding;
+    const adjustedY = y - padding;
+
+    if (adjustedX < 0 || adjustedY < 0) return null;
+
+    // 셀 크기 계산 (56px + 4px gap) - w-14 h-14로 변경
+    const cellSize = 60; // w-14 h-14 + gap-1
+    const col = Math.floor(adjustedX / cellSize);
+    const row = Math.floor(adjustedY / cellSize);
+
+    if (row >= 0 && row < size && col >= 0 && col < size) {
+      return [row, col];
+    }
+    return null;
+  }, [size]);
+
+  // 터치 감도 향상을 위한 추가 처리
+  useEffect(() => {
+    let lastTouchTime = 0;
+
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (!isDrawing || e.touches.length === 0) return;
+
+      // 터치 이벤트 스로틀링 (60fps)
+      const now = Date.now();
+      if (now - lastTouchTime < 16) return;
+      lastTouchTime = now;
+
+      const touch = e.touches[0];
+      const gameGrid = document.querySelector('[data-game-grid]') as HTMLElement;
+      if (gameGrid) {
+        const position = getTouchCellPosition(touch, gameGrid);
+        if (position) {
+          const [row, col] = position;
+          handleMove(row, col);
+        }
+      }
+    };
+
+    if (isDrawing) {
+      document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
+    }
+
+    return () => {
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+    };
+  }, [isDrawing, getTouchCellPosition, handleMove]);
+
+  // 드래그 시작 (마우스 + 터치)
+  const handleStart = (row: number, col: number) => {
+    const cell = gameGrid[row][col];
+
+    if (cell.type === "dot" && cell.color) {
+      // 기존 경로 지우기
+      clearPathsForColor(cell.color);
+
+      setIsDrawing(true);
+      setCurrentColor(cell.color);
+      setCurrentPath([[row, col]]);
+    }
+  };
+
+  const handleMouseDown = (row: number, col: number) => {
+    handleStart(row, col);
+  };
+
+  const handleTouchStart = (row: number, col: number) => {
+    handleStart(row, col);
+  };
+
+  // 특정 색상의 모든 경로 지우기
+  const clearPathsForColor = (color: Color) => {
+    const newGrid = gameGrid.map((row) =>
+      row.map((cell) => {
+        if (cell.type === "path" && cell.color === color) {
+          return { type: "empty" as CellType };
+        }
+        return cell;
+      })
+    );
+    setGameGrid(newGrid);
   };
 
   // 마우스 이벤트
@@ -303,26 +437,44 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
     handleMove(row, col);
   };
 
-  // 터치 이벤트를 위한 좌표 계산
-  const getTouchCellPosition = (touch: React.Touch, gridElement: HTMLElement): [number, number] | null => {
-    const rect = gridElement.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
+  // 연속적인 경로 그리기를 위한 중간점 계산
+  const fillIntermediateCells = (start: [number, number], end: [number, number]) => {
+    const [startRow, startCol] = start;
+    const [endRow, endCol] = end;
+    const cells: Array<[number, number]> = [];
     
-    // 셀 크기 계산 (48px + 4px gap)
-    const cellSize = 52; // w-12 h-12 + gap
-    const col = Math.floor(x / cellSize);
-    const row = Math.floor(y / cellSize);
+    // 브레젠햄 직선 알고리즘의 간단한 버전
+    const dx = Math.abs(endCol - startCol);
+    const dy = Math.abs(endRow - startRow);
+    const sx = startCol < endCol ? 1 : -1;
+    const sy = startRow < endRow ? 1 : -1;
+    let err = dx - dy;
     
-    if (row >= 0 && row < size && col >= 0 && col < size) {
-      return [row, col];
+    let x = startCol;
+    let y = startRow;
+    
+    while (true) {
+      cells.push([y, x]);
+      
+      if (x === endCol && y === endRow) break;
+      
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y += sy;
+      }
     }
-    return null;
+    
+    return cells;
   };
 
-  // 터치 무브 이벤트
+  // 터치 무브 이벤트 (개선된 버전)
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDrawing || e.touches.length === 0) return;
+    if (!isDrawing || e.touches.length === 0 || !currentColor) return;
     
     const touch = e.touches[0];
     const gridElement = e.currentTarget as HTMLElement;
@@ -330,16 +482,32 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
     
     if (position) {
       const [row, col] = position;
-      handleMove(row, col);
+      const lastPos = currentPath[currentPath.length - 1];
+      
+      if (lastPos) {
+        // 마지막 위치와 현재 위치 사이의 모든 셀들을 채움
+        const intermediateCells = fillIntermediateCells(lastPos, [row, col]);
+        
+        for (const [r, c] of intermediateCells) {
+          if (r >= 0 && r < size && c >= 0 && c < size) {
+            const cell = gameGrid[r][c];
+            
+            // 유효한 경로인지 확인
+            if (cell.type === "empty" || 
+                (cell.type === "path" && cell.color === currentColor) ||
+                (cell.type === "dot" && cell.color === currentColor)) {
+              
+              // 경로에 추가 (중복 체크)
+              if (!currentPath.some(([pr, pc]) => pr === r && pc === c)) {
+                handleMove(r, c);
+              }
+            }
+          }
+        }
+      } else {
+        handleMove(row, col);
+      }
     }
-  };
-
-  // 인접 셀 체크
-  const isAdjacent = (
-    [r1, c1]: [number, number],
-    [r2, c2]: [number, number]
-  ): boolean => {
-    return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1;
   };
 
   // 드래그 끝 공통 로직
@@ -355,78 +523,8 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
   };
 
   // 터치 이벤트
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = () => {
     handleEnd();
-  };
-
-  // 게임 완료 체크
-  const checkGameCompletion = () => {
-    console.log("게임 완료 체크 중...");
-    
-    // 모든 페어가 연결되었는지 확인
-    const connectedCount = puzzleData.pairs.filter((pair) => {
-      const [dot1, dot2] = pair.dots;
-      const connected = isPathConnected(dot1, dot2, pair.color);
-      console.log(`${pair.color} 연결 상태:`, connected);
-      return connected;
-    }).length;
-    
-    console.log(`연결된 페어: ${connectedCount}/${puzzleData.pairs.length}`);
-
-    // 모든 셀이 채워졌는지 확인 (Flow Free의 핵심 규칙)
-    const totalCells = size * size;
-    const filledCells = gameGrid.flat().filter(cell => cell.type !== "empty").length;
-    console.log(`채워진 칸: ${filledCells}/${totalCells}`);
-
-    const allConnected = connectedCount === puzzleData.pairs.length;
-    const allFilled = filledCells === totalCells;
-    
-    console.log("모든 페어 연결:", allConnected);
-    console.log("모든 칸 채움:", allFilled);
-
-    if (allConnected && allFilled) {
-      console.log("🎉 게임 완료!");
-      setCompletionTime(currentTime);
-      setGameCompleted(true);
-    }
-  };
-
-  // 경로 연결 확인 (간단한 버전)
-  const isPathConnected = (
-    dot1: [number, number],
-    dot2: [number, number],
-    color: Color
-  ): boolean => {
-    const [r1, c1] = dot1;
-    const [r2, c2] = dot2;
-
-    // 각 점 주변에 같은 색 경로가 있는지 확인
-    const hasPath1 = getAdjacentCells(r1, c1).some(
-      ([r, c]) =>
-        gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
-    );
-
-    const hasPath2 = getAdjacentCells(r2, c2).some(
-      ([r, c]) =>
-        gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
-    );
-
-    return hasPath1 && hasPath2;
-  };
-
-  // 인접 셀 가져오기
-  const getAdjacentCells = (
-    row: number,
-    col: number
-  ): Array<[number, number]> => {
-    return [
-      [row - 1, col],
-      [row + 1, col],
-      [row, col - 1],
-      [row, col + 1],
-    ].filter(([r, c]) => r >= 0 && r < size && c >= 0 && c < size) as Array<
-      [number, number]
-    >;
   };
 
   // 게임 완료 화면
@@ -514,6 +612,7 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
         <div className="flex justify-center">
           <div
             className="grid gap-1 bg-gray-700 p-6 rounded-lg border border-gray-600"
+            data-game-grid
             style={{
               gridTemplateColumns: `repeat(${size}, 1fr)`,
               width: "fit-content",
@@ -529,7 +628,7 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   className={`
-                    w-12 h-12 border border-gray-600 cursor-pointer transition-all duration-150 select-none
+                    w-14 h-14 border border-gray-600 cursor-pointer transition-all duration-150 select-none
                     ${cell.type === "empty" ? "bg-black hover:bg-gray-800" : ""}
                     ${
                       cell.type === "dot"
@@ -549,7 +648,7 @@ function FlowFreeGame({ size, onBack }: { size: 5 | 6; onBack: () => void }) {
                   onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                   onMouseUp={handleMouseUp}
                   onDragStart={(e) => e.preventDefault()}
-                  onTouchStart={(e) => handleTouchStart(rowIndex, colIndex, e)}
+                  onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
                   onTouchEnd={handleTouchEnd}
                 >
                   {cell.type === "dot" && (
