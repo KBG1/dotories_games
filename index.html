@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>한줄 도넛 쌓기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg:#fafafa;
+    --fg:#2c3e50;
+    --accent:#ff6b6b;
+    --ok:#2ecc71;
+  }
+  html, body { height:100%; }
+  body { margin:0; overflow:hidden; background:var(--bg); touch-action:none; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  canvas { display:block; }
+
+  /* HUD */
+  .hud {
+    position:fixed; left:50%; top:14px; transform:translateX(-50%);
+    display:flex; gap:16px; align-items:center;
+    background:rgba(255,255,255,.95); padding:10px 16px; border-radius:16px;
+    box-shadow:0 6px 20px rgba(0,0,0,.1);
+    user-select:none; font-weight:600;
+    border:1px solid rgba(255,255,255,.2);
+  }
+  .pill { 
+    padding:6px 12px; border-radius:999px; background:#fff; 
+    border:1px solid #eee; font-size:0.9rem;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
+  .good { color:var(--ok); font-weight:700; }
+  .bad { color:var(--accent); font-weight:700; }
+
+  /* Messages */
+  #messageWrap {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;
+  }
+  #failMessage, #startMessage {
+    display:none; text-align:center; pointer-events:auto;
+    background:rgba(255,255,255,.98); padding:32px 36px; border-radius:20px; 
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+    border:1px solid rgba(255,255,255,.3);
+    max-width:400px; margin:20px;
+  }
+  #failMessage h1, #startMessage h1 { margin:.2em 0; font-size:2.4rem; font-weight:700; }
+  #failMessage p, #startMessage p { margin:.4em 0 1.5em; opacity:.8; line-height:1.5; }
+  .btn {
+    font-size:1.1rem; padding:.8em 1.6em; border-radius:14px; border:none; cursor:pointer;
+    background:var(--fg); color:#fff; font-weight:600;
+    transition:all 0.2s ease; box-shadow:0 4px 12px rgba(44,62,80,.3);
+  }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(44,62,80,.4); }
+</style>
+</head>
+<body>
+<div class="hud" id="hud">
+  <span class="pill">높이 <span id="score">0</span></span>
+  <span class="pill">최고 <span id="best">0</span></span>
+  <span class="pill">속도 <span id="speedDisp">8</span></span>
+</div>
+
+<div id="messageWrap">
+  <div id="startMessage">
+    <h1>🍩 한줄 도넛 쌓기</h1>
+    <p>화면을 <b>클릭</b>하면 이동 중인 도넛이 떨어집니다.<br/>도넛을 <b>한 줄로 높이 쌓아서</b> 최고 기록을 세워보세요!</p>
+    <button id="startButton" class="btn">🎮 시작하기</button>
+  </div>
+  <div id="failMessage">
+    <h1 class="bad">💥 실패!</h1>
+    <p id="failReason">탑이 무너졌어요.</p>
+    <p style="font-size:0.9rem; opacity:0.7; margin-top:1em;">최고 높이: <span id="bestInFail">0</span>개</p>
+    <button id="resetButton" class="btn">🔄 다시 쌓기</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+const { Engine, Render, Runner, Bodies, Body, Composite, Events } = Matter;
+
+// 게임 설정 - 화면 크기에 따라 동적으로 계산
+function getGameSettings() {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const baseWidth = Math.min(screenWidth, screenHeight) * 0.12; // 화면 크기의 12%
+  
+  // 화면 너비에 따른 속도 조정 (큰 화면일수록 빠르게)
+  const baseSpeed = Math.max(3, Math.min(8, screenWidth / 150)); // 3~8 사이로 제한
+  
+  // 화면 크기에 따른 물리 설정 (작은 화면일수록 안정적으로)
+  const sizeRatio = Math.min(screenWidth, screenHeight) / 800; // 800px 기준
+  const physicsScale = Math.max(0.5, Math.min(1.2, sizeRatio)); // 0.5~1.2 배율
+  
+  return {
+    donut: {
+      width: baseWidth,
+      height: baseWidth * 0.5, // 가로:세로 = 2:1 비율
+      tolerance: baseWidth * 0.6, // 허용 범위
+    },
+    speed: {
+      start: baseSpeed,
+      increment: baseSpeed * 0.025, // 시작 속도의 2.5%씩 증가
+    },
+    physics: {
+      gravity: 0.8 * physicsScale, // 작은 화면일수록 약한 중력
+      density: 0.0015 * physicsScale, // 작은 화면일수록 가벼움
+      friction: Math.max(0.6, 0.7 + (1 - physicsScale) * 0.3), // 작은 화면일수록 높은 마찰력
+      restitution: Math.max(0.05, 0.2 * physicsScale), // 작은 화면일수록 적게 튕김
+    }
+  };
+}
+
+// 물리 설정은 동적으로 계산되므로 제거
+const ANGLE_LIMIT_DEG = 30;
+// 속도는 동적으로 계산되므로 제거
+const DROP_COOLDOWN_MS = 800;
+const STABLE_SPEED_EPS = 0.1;
+const STABLE_ANGVEL_EPS = 0.01;
+const DONUT_SPRITE_URL = "donut.png";
+
+let engine, world, render, runner;
+let ground, leftWall, rightWall;
+let movingDonut = null;
+let direction = 1;
+let speed = getGameSettings().speed.start;
+
+let stackCenterX = null;
+let donutStack = [];
+let gameOver = false;
+let started = false;
+let score = 0;
+let best = Number(localStorage.getItem("donut_best") || 0);
+let nextDonutReady = false;
+
+// DOM
+const $score = document.getElementById('score');
+const $best = document.getElementById('best');
+const $speedDisp = document.getElementById('speedDisp');
+const $failMessage = document.getElementById('failMessage');
+const $failReason = document.getElementById('failReason');
+const $bestInFail = document.getElementById('bestInFail');
+const $resetButton = document.getElementById('resetButton');
+const $startMessage = document.getElementById('startMessage');
+const $startButton = document.getElementById('startButton');
+
+$best.textContent = best;
+$speedDisp.textContent = speed.toFixed(1);
+
+// 유틸
+const rad2deg = r => r * 180 / Math.PI;
+
+// 월드/렌더 생성
+function createEngineAndRender() {
+  engine = Engine.create();
+  world = engine.world;
+  
+  const gameSettings = getGameSettings();
+  engine.world.gravity.y = gameSettings.physics.gravity;
+  engine.timing.timeScale = 1.0;
+
+  render = Render.create({
+    element: document.body,
+    engine,
+    options: {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      wireframes: false,
+      background: '#f8f9fa',
+      pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      showVelocity: false,
+      showAngleIndicator: false,
+      showCollisions: false
+    }
+  });
+  Render.run(render);
+  runner = Runner.create();
+  Runner.run(runner, engine);
+
+  setupBoundaries();
+}
+
+function setupBoundaries() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  ground = Bodies.rectangle(w/2, h-18, w+200, 36, { 
+    isStatic: true, 
+    friction: 1.0,
+    render:{ fillStyle: '#2c3e50' }
+  });
+  leftWall = Bodies.rectangle(-40, h/2, 80, h*2, { isStatic: true, render:{ visible:false }});
+  rightWall = Bodies.rectangle(w+40, h/2, 80, h*2, { isStatic: true, render:{ visible:false }});
+  Composite.add(world, [ground, leftWall, rightWall]);
+}
+
+// 도넛 생성/이동/드롭
+function createMovingDonut() {
+  if (movingDonut) return; // 이미 있으면 생성하지 않음
+  
+  const w = window.innerWidth;
+  const gameSettings = getGameSettings(); // 동적 설정 계산
+  const donutSize = gameSettings.donut;
+  const startX = Math.random() < 0.5 ? donutSize.width : w - donutSize.width;
+  const startY = 80;
+
+  const donut = Bodies.rectangle(startX, startY, donutSize.width, donutSize.height, {
+    isStatic: true,
+    density: gameSettings.physics.density,
+    friction: gameSettings.physics.friction,
+    restitution: gameSettings.physics.restitution,
+    // inertia: Infinity, // 회전 허용으로 변경
+    render: DONUT_SPRITE_URL ? {
+      sprite: { 
+        texture: DONUT_SPRITE_URL, 
+        xScale: donutSize.width/200, 
+        yScale: donutSize.height/200 
+      }
+    } : {
+      fillStyle: '#f39c12', 
+      strokeStyle: '#e67e22', 
+      lineWidth: 3
+    }
+  });
+
+  movingDonut = donut;
+  Composite.add(world, donut);
+  direction = (startX < window.innerWidth / 2) ? 1 : -1;
+  nextDonutReady = true;
+}
+
+function dropDonut() {
+  if (gameOver || !started || !movingDonut || !nextDonutReady) return;
+
+  // 첫 번째 도넛이면 스택 중심 설정
+  if (stackCenterX === null) {
+    stackCenterX = movingDonut.position.x;
+  }
+
+  // 드롭
+  Body.setStatic(movingDonut, false);
+  Body.setAngularVelocity(movingDonut, 0);
+  Body.setAngle(movingDonut, 0);
+  
+  donutStack.push(movingDonut);
+  movingDonut = null;
+  nextDonutReady = false;
+}
+
+// 실패/성공 판정
+function isSleeping(body) {
+  return body && !body.isStatic &&
+         Math.hypot(body.velocity.x, body.velocity.y) < STABLE_SPEED_EPS &&
+         Math.abs(body.angularVelocity) < STABLE_ANGVEL_EPS;
+}
+
+function checkTowerStability() {
+  if (donutStack.length === 0) return { stable: true };
+
+  const donutSize = getGameSettings().donut; // 동적 크기 가져오기
+
+  for (let donut of donutStack) {
+    if (!donut) continue;
+
+    // 바닥 밖으로 완전히 떨어진 도넛만 실패 처리
+    if (donut.position.y > window.innerHeight + donutSize.height * 2) {
+      return { stable: false, reason: '도넛탑이 무너졌어요!' };
+    }
+
+    // 도넛이 2개 이상일 때만 한 줄 체크 (첫 도넛은 어디든 OK)
+    if (donutStack.length >= 2 && stackCenterX !== null) {
+      const dx = Math.abs(donut.position.x - stackCenterX);
+      if (dx > donutSize.tolerance * 1.5) { // 더 관대하게
+        return { stable: false, reason: '한 줄에서 벗어났어요!' };
+      }
+    }
+
+    // 완전히 뒤집어진 도넛만 실패 (90도 이상)
+    const angleDeg = Math.abs(rad2deg(donut.angle));
+    if (angleDeg > 80) {
+      return { stable: false, reason: '도넛이 넘어졌어요!' };
+    }
+  }
+  
+  return { stable: true };
+}
+
+function showFail(reasonText) {
+  gameOver = true;
+  $failReason.textContent = reasonText || '탑이 무너졌어요.';
+  $bestInFail.textContent = best;
+  $failMessage.style.display = 'block';
+}
+
+// 스코어/난이도
+function onSuccessfulPlace() {
+  score += 1;
+  $score.textContent = score;
+  if (score > best) {
+    best = score;
+    localStorage.setItem('donut_best', String(best));
+    $best.textContent = best;
+  }
+  const gameSettings = getGameSettings();
+  const maxSpeed = gameSettings.speed.start * 2.5; // 시작 속도의 2.5배까지
+  speed = Math.min(gameSettings.speed.start + score * gameSettings.speed.increment, maxSpeed);
+  $speedDisp.textContent = speed.toFixed(1);
+  
+  // 성공 시 시각적 피드백
+  $score.style.color = 'var(--ok)';
+  setTimeout(() => {
+    $score.style.color = '';
+  }, 300);
+}
+
+// 루프 이벤트
+function attachEngineEvents() {
+  // 좌우 이동
+  Events.on(engine, 'beforeUpdate', () => {
+    if (gameOver) return;
+
+    if (movingDonut && movingDonut.isStatic) {
+      Body.translate(movingDonut, { x: speed * direction, y: 0 });
+
+      const donutSize = getGameSettings().donut;
+      const margin = donutSize.width / 2 + 10;
+      if (movingDonut.position.x > window.innerWidth - margin || movingDonut.position.x < margin) {
+        direction *= -1;
+      }
+    }
+    
+    // 회전 제어 (너무 강하지 않게)
+    donutStack.forEach(donut => {
+      if (donut && !donut.isStatic) {
+        // 회전 속도만 줄이고, 각도는 자연스럽게 유지
+        if (Math.abs(donut.angularVelocity) > 0.1) {
+          Body.setAngularVelocity(donut, donut.angularVelocity * 0.8);
+        }
+      }
+    });
+  });
+
+  // 안정화 및 실패 판정
+  Events.on(engine, 'afterUpdate', () => {
+    if (gameOver) return;
+
+    // 타워 안정성 체크
+    const stability = checkTowerStability();
+    if (!stability.stable) {
+      showFail(stability.reason);
+      return;
+    }
+
+    // 안정화 체크
+    for (let donut of donutStack) {
+      if (!donut || donut.isStatic) continue;
+
+      if (isSleeping(donut)) {
+        if (!donut.hasScored) {
+          donut.hasScored = true;
+          onSuccessfulPlace();
+          
+          // 다음 도넛 생성
+          setTimeout(() => {
+            if (!gameOver) createMovingDonut();
+          }, DROP_COOLDOWN_MS);
+        }
+      }
+    }
+  });
+}
+
+// 시작/리셋/입력
+function startGame() {
+  if (started) return;
+  started = true;
+  gameOver = false;
+  score = 0;
+  speed = getGameSettings().speed.start;
+  donutStack = [];
+  stackCenterX = null;
+  nextDonutReady = false;
+  
+  $score.textContent = score;
+  $speedDisp.textContent = speed.toFixed(1);
+  $startMessage.style.display = 'none';
+  $failMessage.style.display = 'none';
+
+  createMovingDonut();
+}
+
+function resetGame() {
+  try {
+    Render.stop(render);
+    Runner.stop(runner);
+    render.canvas.remove();
+    render.textures = {};
+  } catch(e){}
+
+  Composite.clear(engine.world, false);
+  engine.events = {};
+
+  donutStack = [];
+  stackCenterX = null;
+  movingDonut = null;
+  started = false;
+  gameOver = false;
+  speed = getGameSettings().speed.start;
+  nextDonutReady = false;
+  
+  $score.textContent = '0';
+  $speedDisp.textContent = speed.toFixed(1);
+
+  createEngineAndRender();
+  attachEngineEvents();
+
+  $failMessage.style.display = 'none';
+  $startMessage.style.display = 'block';
+}
+
+function handleClick() {
+  if (!started) {
+    startGame();
+  } else {
+    dropDonut();
+  }
+}
+
+// 이벤트 리스너
+window.addEventListener('click', handleClick);
+$startButton.addEventListener('click', (e) => {
+  e.stopPropagation();
+  startGame();
+});
+$resetButton.addEventListener('click', resetGame);
+
+// 리사이즈
+function onResize() {
+  if (!render) return;
+  const w = window.innerWidth, h = window.innerHeight;
+  render.canvas.width = w;
+  render.canvas.height = h;
+  render.options.width = w;
+  render.options.height = h;
+
+  Body.setPosition(ground, { x: w/2, y: h - 18 });
+  Body.setVertices(ground, Bodies.rectangle(w/2, h-18, w+200, 36).vertices);
+  Body.setPosition(leftWall, { x:-40, y:h/2 });
+  Body.setPosition(rightWall, { x:w+40, y:h/2 });
+}
+window.addEventListener('resize', onResize);
+
+// 부트스트랩
+createEngineAndRender();
+attachEngineEvents();
+$startMessage.style.display = 'block';
+
+</script>
+</body>
+</html>
