@@ -3,22 +3,43 @@ import React from "react";
 
 function Home() {
   return (
-    <>
-      <div className="w-full text-center p-12 flex flex-col items-center">
-        <Link
-          href="/game"
-          className="text-2xl font-bold bg-[#6ead79] p-4 text-white rounded-md hover:bg-[#4d8750] cursor-pointer"
+    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex flex-col justify-center items-center p-5 sm:p-8">
+      <h1 className="text-white text-3xl sm:text-4xl font-bold mb-8 sm:mb-10 text-center drop-shadow-lg">
+        🎮 도토리 게임
+      </h1>
+      
+      <div className="flex flex-col gap-5 w-full max-w-sm">
+        <Link 
+          href="/flow_free_game" 
+          className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
         >
-          선 연결 게임하러 가기 버튼
+          <span className="block text-2xl sm:text-3xl mb-2">🌸</span>
+          <span className="block text-gray-800 font-semibold text-base sm:text-lg">
+            선 연결 게임
+          </span>
         </Link>
-        <Link
-          href="/game2"
-          className="mt-12 text-2xl font-bold bg-[#6ead79] p-4 text-white rounded-md hover:bg-[#4d8750] cursor-pointer"
+        
+        <Link 
+          href="/doughnut_game" 
+          className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
         >
-          도넛 게임하러 가기 버튼
+          <span className="block text-2xl sm:text-3xl mb-2">🍩</span>
+          <span className="block text-gray-800 font-semibold text-base sm:text-lg">
+            도넛 쌓기 게임
+          </span>
+        </Link>
+
+        <Link 
+          href="/arithmetic_game" 
+          className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
+        >
+          <span className="block text-2xl sm:text-3xl mb-2">🧮</span>
+          <span className="block text-gray-800 font-semibold text-base sm:text-lg">
+            사칙연산 게임
+          </span>
         </Link>
       </div>
-    </>
+    </div>
   );
 }
 
