@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useRef } from 'react'
-import Matter from 'matter-js'
 
 function Game2() {
   const gameInitialized = useRef(false)
@@ -9,8 +8,30 @@ function Game2() {
     if (gameInitialized.current) return
     gameInitialized.current = true
 
-    // Matter.js가 이미 import되어 있으므로 바로 게임 초기화
-    initializeGame()
+    // Matter.js를 동적으로 import하여 SSR 문제 해결
+    // DOM이 완전히 로드될 때까지 기다림
+    const initGame = () => {
+      import('matter-js').then((Matter) => {
+        // DOM 요소들이 모두 렌더링되었는지 확인
+        const checkDOM = () => {
+          const requiredElements = ['score', 'best', 'speedDisp', 'failMessage', 'failReason', 'bestInFail', 'resetButton', 'startMessage', 'startButton']
+          const allExists = requiredElements.every(id => document.getElementById(id))
+
+          if (allExists) {
+            initializeGame(Matter.default)
+          } else {
+            // DOM이 아직 준비되지 않았으면 잠시 후 다시 시도
+            setTimeout(checkDOM, 100)
+          }
+        }
+        checkDOM()
+      }).catch((error) => {
+        console.error('Matter.js 로드 실패:', error)
+      })
+    }
+
+    // 컴포넌트가 완전히 마운트된 후 게임 초기화
+    setTimeout(initGame, 50)
 
     // 브라우저 뒤로가기/새로고침 감지
     const handleBeforeUnload = () => {
@@ -41,7 +62,7 @@ function Game2() {
     }
   }, [])
 
-  const initializeGame = () => {
+  const initializeGame = (Matter: typeof import('matter-js')) => {
     const { Engine, Render, Runner, Bodies, Body, Composite, Events } = Matter
 
     // 게임 설정 - 화면 크기에 따라 동적으로 계산
@@ -97,7 +118,7 @@ function Game2() {
     let best = Number(localStorage.getItem("donut_best") || 0)
     let nextDonutReady = false
 
-    // DOM
+    // DOM 요소들을 안전하게 가져오기
     const $score = document.getElementById('score')
     const $best = document.getElementById('best')
     const $speedDisp = document.getElementById('speedDisp')
@@ -107,6 +128,12 @@ function Game2() {
     const $resetButton = document.getElementById('resetButton')
     const $startMessage = document.getElementById('startMessage')
     const $startButton = document.getElementById('startButton')
+
+    // DOM 요소가 존재하지 않으면 게임 초기화 중단
+    if (!$score || !$best || !$speedDisp || !$failMessage || !$failReason || !$bestInFail || !$resetButton || !$startMessage || !$startButton) {
+      console.error('게임 UI 요소를 찾을 수 없습니다. DOM이 완전히 로드되었는지 확인하세요.')
+      return
+    }
 
     if ($best) $best.textContent = String(best)
     if ($speedDisp) $speedDisp.textContent = speed.toFixed(1)
