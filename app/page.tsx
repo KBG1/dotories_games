@@ -10,7 +10,7 @@ function Home() {
       
       <div className="flex flex-col gap-5 w-full max-w-sm">
         <Link 
-          href="/flow_free_game" 
+          href="/color_line_game" 
           className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
         >
           <span className="block text-2xl sm:text-3xl mb-2">🌸</span>
