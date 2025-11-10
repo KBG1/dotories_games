@@ -38,7 +38,7 @@ export default function FlipCardGame() {
   const DIFFICULTY_CONFIGS = {
     easy: { name: "쉬움", pairs: 4, cards: 8, coin: 5 },
     normal: { name: "보통", pairs: 8, cards: 16, coin: 8 },
-    hard: { name: "어려움", pairs: 12, cards: 24, coin: 12 }
+    hard: { name: "어려움", pairs: 12, cards: 24, coin: 12 },
   };
 
   // 카드 섞기 함수
@@ -129,7 +129,11 @@ export default function FlipCardGame() {
 
   // 카드가 뒤집혀있는지 확인
   const isCardFlipped = (cardId: number) => {
-    return showingCards || flippedCards.includes(cardId) || matchedCards.includes(cardId);
+    return (
+      showingCards ||
+      flippedCards.includes(cardId) ||
+      matchedCards.includes(cardId)
+    );
   };
 
   // 난이도 선택 화면
@@ -197,17 +201,17 @@ export default function FlipCardGame() {
                       </div>
                     </div>
                     <div className="flex items-center justify-center gap-1 text-orange-600 font-semibold mt-2">
-                        <span className="text-lg">🪙</span>
-                        <span
-                          className={`${
-                            selectedDifficulty === key
-                              ? "text-white"
-                              : "text-red-400"
-                          }`}
-                        >
-                          {config.coin}
-                        </span>
-                      </div>
+                      <span className="text-lg">🪙</span>
+                      <span
+                        className={`${
+                          selectedDifficulty === key
+                            ? "text-white"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {config.coin}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -215,13 +219,14 @@ export default function FlipCardGame() {
               {/* 게임 시작 버튼 */}
               <div className="mt-6">
                 <button
-                  onClick={() => startGameWithDifficulty(selectedDifficulty as string)}
+                  onClick={() =>
+                    startGameWithDifficulty(selectedDifficulty as string)
+                  }
                   className="w-[90%] mx-auto block py-4 bg-red-400 text-white rounded-full font-bold text-lg hover:bg-red-500 transition-colors shadow-lg"
                 >
                   게임 시작
                 </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -257,11 +262,19 @@ export default function FlipCardGame() {
 
   // 게임 화면
   const gridCols = 4; // 모든 난이도 4열로 통일
-  const maxWidth = gameCards.length === 8 ? "400px" : gameCards.length === 16 ? "450px" : "350px"; // 어려움은 더 작게
+  const maxWidth =
+    gameCards.length === 8
+      ? "400px"
+      : gameCards.length === 16
+      ? "450px"
+      : "350px"; // 어려움은 더 작게
   const cardGap = gameCards.length === 24 ? "gap-1.5" : "gap-2"; // 어려움은 간격도 좁게
 
   return (
-    <div className="min-h-screen p-4 relative" style={{ backgroundColor: "#F5F1E8" }}>
+    <div
+      className="min-h-screen p-4 relative"
+      style={{ backgroundColor: "#F5F1E8" }}
+    >
       <style jsx global>{`
         body {
           margin: 0;
@@ -300,33 +313,18 @@ export default function FlipCardGame() {
         }
       `}</style>
 
-      <div className="max-w-2xl mx-auto">
-        {/* 상단 HUD */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <button
-            onClick={() => setShowDifficultySelect(true)}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-          >
-            ←
-          </button>
-
-          <div className="bg-white rounded-full px-4 py-2 shadow-sm">
-            <span className="text-sm font-semibold text-gray-600">
-              매칭: {matchedCards.length / 2} / {gameCards.length / 2}
-            </span>
-          </div>
-        </div>
+      <div className="max-w-2xl mx-auto mt-6">
 
         {/* 미리보기 메시지 */}
         {showingCards && (
           <div className="mb-6 bg-red-400 rounded-2xl p-6 text-center shadow-lg animate-pulse">
-            <div className="text-5xl font-bold text-white mb-3">{countdown}</div>
+            <div className="text-5xl font-bold text-white mb-3">
+              {countdown}
+            </div>
             <p className="text-xl font-bold text-white mb-1">
               잘 보고 카드를 기억하세요!
             </p>
-            <p className="text-md text-white">
-              같은 그림의 위치를 외워보세요
-            </p>
+            <p className="text-md text-white">같은 그림의 위치를 외워보세요</p>
           </div>
         )}
 
@@ -350,10 +348,14 @@ export default function FlipCardGame() {
               <div className="flip-card-inner">
                 {/* 앞면 (뒷면 이미지) */}
                 <div className="flip-card-front">
-                  <div className="text-white text-4xl font-bold">?</div>
+                  <Image
+                    src={gameData.backImage}
+                    alt="back"
+                    width={100}
+                    height={100}
+                  />
                 </div>
 
-                {/* 뒷면 (카드 이미지) */}
                 <div className="flip-card-back bg-white">
                   <Image
                     width={100}

@@ -36,7 +36,9 @@ function CrosswordPuzzles() {
     null
   );
   const [usedLetters, setUsedLetters] = useState<Set<number>>(new Set());
-  const [cellToLetterIndex, setCellToLetterIndex] = useState<Map<string, number>>(new Map());
+  const [cellToLetterIndex, setCellToLetterIndex] = useState<
+    Map<string, number>
+  >(new Map());
 
   // 난이도별 설정
   const DIFFICULTY_CONFIGS = {
@@ -58,7 +60,6 @@ function CrosswordPuzzles() {
         setLoading(false);
       });
   }, []);
-
 
   // 난이도 선택 및 랜덤 퍼즐 시작
   const startGameWithDifficulty = (difficulty: string) => {
@@ -142,13 +143,13 @@ function CrosswordPuzzles() {
     // 빈 칸에만 글자 입력 가능
     if (originalCell === "" || originalCell === "?") {
       const cellKey = `${row}-${col}`;
-      
+
       // 이미 해당 칸에 글자가 있다면 이전 글자를 복구
       const existingLetter = userGrid[row][col];
       if (existingLetter) {
         const previousLetterIndex = cellToLetterIndex.get(cellKey);
         if (previousLetterIndex !== undefined) {
-          setUsedLetters(prev => {
+          setUsedLetters((prev) => {
             const newSet = new Set(prev);
             newSet.delete(previousLetterIndex);
             return newSet;
@@ -161,8 +162,8 @@ function CrosswordPuzzles() {
       setUserGrid(newGrid);
 
       // 새로운 글자 사용 처리
-      setUsedLetters(prev => new Set([...prev, letterIndex]));
-      setCellToLetterIndex(prev => new Map(prev).set(cellKey, letterIndex));
+      setUsedLetters((prev) => new Set([...prev, letterIndex]));
+      setCellToLetterIndex((prev) => new Map(prev).set(cellKey, letterIndex));
 
       checkCompletion(newGrid);
     }
@@ -179,17 +180,17 @@ function CrosswordPuzzles() {
     if (originalCell === "" || originalCell === "?") {
       const cellKey = `${row}-${col}`;
       const letterIndex = cellToLetterIndex.get(cellKey);
-      
+
       if (letterIndex !== undefined) {
         // 삭제된 글자를 다시 사용 가능하게 만들기
-        setUsedLetters(prev => {
+        setUsedLetters((prev) => {
           const newSet = new Set(prev);
           newSet.delete(letterIndex);
           return newSet;
         });
-        
+
         // 셀-글자 매핑 제거
-        setCellToLetterIndex(prev => {
+        setCellToLetterIndex((prev) => {
           const newMap = new Map(prev);
           newMap.delete(cellKey);
           return newMap;
@@ -223,7 +224,7 @@ function CrosswordPuzzles() {
       setGameCompleted(true);
     }
   };
-  
+
   const handleReset = () => {
     if (currentPuzzle) {
       initializeUserGrid(currentPuzzle);
@@ -231,7 +232,7 @@ function CrosswordPuzzles() {
       setUsedLetters(new Set());
       setCellToLetterIndex(new Map());
     }
-  }
+  };
   // 난이도 선택 화면
   if (showDifficultySelect) {
     return (
@@ -309,16 +310,14 @@ function CrosswordPuzzles() {
               </div>
 
               {/* 게임 시작 버튼 */}
-              {selectedDifficulty && (
-                <div className="mt-6">
-                  <button
-                    onClick={() => startGameWithDifficulty(selectedDifficulty)}
-                    className="w-[90%] mx-auto block py-4 bg-purple-500 text-white rounded-full font-bold text-lg hover:bg-purple-600 transition-colors shadow-lg"
-                  >
-                    게임 시작
-                  </button>
-                </div>
-              )}
+              <div className="mt-6">
+                <button
+                  onClick={() => startGameWithDifficulty(selectedDifficulty as string)}
+                  className="w-[90%] mx-auto block py-4 bg-purple-500 text-white rounded-full font-bold text-lg hover:bg-purple-600 transition-colors shadow-lg"
+                >
+                  게임 시작
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -400,22 +399,7 @@ function CrosswordPuzzles() {
         }
       `}</style>
 
-      <div className="max-w-md mx-auto">
-        {/* 상단 HUD */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <button
-            onClick={() => setShowDifficultySelect(true)}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-          >
-            ←
-          </button>
-
-          <div className="bg-white rounded-full px-4 py-2 shadow-sm">
-            <span className="text-sm font-semibold text-gray-600">
-              퍼즐 난이도 - {currentPuzzle?.difficulty === "easy" ? "쉬움" : currentPuzzle?.difficulty === "medium" ? "보통" : "어려움"}
-            </span>
-          </div>
-        </div>
+      <div className="max-w-md mx-auto mt-6">
 
         {/* 게임 그리드 */}
         <div className="bg-white rounded-2xl p-4 shadow-lg mb-6">
@@ -423,7 +407,8 @@ function CrosswordPuzzles() {
             className="grid gap-1 mx-auto"
             style={{
               gridTemplateColumns: `repeat(${currentPuzzle?.size || 5}, 1fr)`,
-              width: "fit-content",
+              maxWidth: "min(100%, 400px)",
+              width: "100%",
             }}
           >
             {currentPuzzle?.grid.map((row, rowIndex) =>
@@ -435,12 +420,15 @@ function CrosswordPuzzles() {
                 const isBlank = cell === "" || cell === "?";
                 const isBlockedCell = cell === "X";
                 const isFixed = !isBlank && !isBlockedCell;
-                const isCorrect = userCell && isBlank && isCorrectAnswer(rowIndex, colIndex, userCell);
+                const isCorrect =
+                  userCell &&
+                  isBlank &&
+                  isCorrectAnswer(rowIndex, colIndex, userCell);
 
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
-                    className={`crossword-cell w-12 h-12 border-2 transition-all duration-150 rounded-lg flex items-center justify-center font-bold text-lg ${
+                    className={`crossword-cell aspect-square border-2 transition-all duration-150 rounded-lg flex items-center justify-center font-bold text-base ${
                       isBlockedCell
                         ? "border-gray-600 bg-gray-600 cursor-default"
                         : isCorrect
