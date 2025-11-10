@@ -281,7 +281,7 @@ export default function FlipCardGame() {
       ? "400px"
       : gameCards.length === 16
       ? "450px"
-      : "250px"; // 어려움은 더 작게
+      : "300px"; // 어려움은 더 작게
   const cardGap = gameCards.length === 24 ? "gap-1.5" : "gap-2"; // 어려움은 간격도 좁게
 
   return (
