@@ -523,7 +523,7 @@ function CrosswordPuzzles() {
         </button>
       </div>
 
-      <div className="mt-24"></div>
+      <div className="mt-12"></div>
     </div>
   );
 }

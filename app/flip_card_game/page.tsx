@@ -31,8 +31,9 @@ export default function FlipCardGame() {
   const [matchedCards, setMatchedCards] = useState<number[]>([]);
   const [isChecking, setIsChecking] = useState(false);
   const [gameCompleted, setGameCompleted] = useState(false);
-  const [showingCards, setShowingCards] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [showPrepareModal, setShowPrepareModal] = useState(false); // 안내 모달
+  const [showingCards, setShowingCards] = useState(false); // 카드 보여주기
+  const [countdown, setCountdown] = useState(5); // 카운트다운
 
   // 난이도별 설정
   const DIFFICULTY_CONFIGS = {
@@ -63,9 +64,22 @@ export default function FlipCardGame() {
     setIsChecking(false);
     setGameCompleted(false);
     setShowDifficultySelect(false);
-    setShowingCards(true);
+    setShowPrepareModal(true); // 먼저 안내 모달 표시
+    setShowingCards(false);
     setCountdown(3);
   };
+
+  // 안내 모달 표시 후 카드 보여주기 시작
+  useEffect(() => {
+    if (showPrepareModal) {
+      const timer = setTimeout(() => {
+        setShowPrepareModal(false);
+        setShowingCards(true); // 카드 보여주기 시작
+        setCountdown(5); // 카운트다운 초기화
+      }, 1500); // 1.5초 후 모달 닫기
+      return () => clearTimeout(timer);
+    }
+  }, [showPrepareModal]);
 
   // 카운트다운 및 카드 숨기기 로직
   useEffect(() => {
@@ -267,7 +281,7 @@ export default function FlipCardGame() {
       ? "400px"
       : gameCards.length === 16
       ? "450px"
-      : "350px"; // 어려움은 더 작게
+      : "250px"; // 어려움은 더 작게
   const cardGap = gameCards.length === 24 ? "gap-1.5" : "gap-2"; // 어려움은 간격도 좁게
 
   return (
@@ -310,21 +324,31 @@ export default function FlipCardGame() {
         }
       `}</style>
 
-      <div className="max-w-2xl mx-auto mt-6">
-
-        {/* 미리보기 메시지 */}
-        {showingCards && (
-          <div className="mb-6 bg-red-400 rounded-2xl p-6 text-center shadow-lg animate-pulse">
-            <div className="text-5xl font-bold text-white mb-3">
-              {countdown}
-            </div>
-            <p className="text-xl font-bold text-white mb-1">
-              잘 보고 카드를 기억하세요!
+      {/* 안내 모달 */}
+      {showPrepareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl p-8 mx-4 max-w-sm text-center shadow-2xl animate-pulse">
+            <div className="text-6xl mb-4">🎴</div>
+            <p className="text-lg text-gray-600 mb-2">
+              먼저 카드를 보고
             </p>
-            <p className="text-md text-white">같은 그림의 위치를 외워보세요</p>
+            <p className="text-lg text-gray-600">
+              위치를 기억하세요!
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
+      {/* 카운트다운 오버레이 (투명 배경) */}
+      {showingCards && countdown > 0 && (
+        <div className="fixed inset-0 flex items-center justify-center z-40 pointer-events-none">
+          <div className="text-9xl font-bold text-red-400 opacity-80 animate-bounce drop-shadow-2xl">
+            {countdown}
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-2xl mx-auto mt-6">
         {/* 카드 그리드 */}
         <div
           className={`grid ${cardGap} mx-auto`}
@@ -368,7 +392,7 @@ export default function FlipCardGame() {
         </div>
       </div>
 
-      <div className="mt-24"></div>
+      <div className="mt-12"></div>
     </div>
   );
 }

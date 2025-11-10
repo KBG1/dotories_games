@@ -424,7 +424,7 @@ export default function ArithmeticGame() {
           </div>
         )}
 
-        <div className="mt-24"></div>
+        <div className="mt-12"></div>
 
       </div>
     </div>
