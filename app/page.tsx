@@ -13,7 +13,7 @@ function Home() {
           href="/crossword_puzzles" 
           className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
         >
-          <span className="block text-2xl sm:text-3xl mb-2">🎲</span>
+          <span className="block text-2xl sm:text-3xl mb-2">🧩</span>
           <span className="block text-gray-800 font-semibold text-base sm:text-lg">
             가로세로 게임
           </span>
@@ -23,7 +23,7 @@ function Home() {
           href="/color_line_game" 
           className="group block p-5 sm:p-6 bg-white/95 backdrop-blur-sm rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-white active:translate-y-0 border border-white/20"
         >
-          <span className="block text-2xl sm:text-3xl mb-2">🌸</span>
+          <span className="block text-2xl sm:text-3xl mb-2"></span>
           <span className="block text-gray-800 font-semibold text-base sm:text-lg">
             선 연결 게임
           </span>
