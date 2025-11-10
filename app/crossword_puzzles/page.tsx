@@ -378,9 +378,6 @@ function CrosswordPuzzles() {
       className="min-h-screen p-4"
       style={{
         backgroundColor: "#F5F1E8",
-        touchAction: "none",
-        overscrollBehavior: "none",
-        userSelect: "none",
       }}
     >
       <style jsx global>{`
@@ -388,11 +385,9 @@ function CrosswordPuzzles() {
           margin: 0;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
             sans-serif;
-          touch-action: manipulation;
-          overscroll-behavior: none;
         }
         .crossword-cell {
-          touch-action: none;
+          touch-action: manipulation;
           user-select: none;
           -webkit-user-select: none;
           -webkit-touch-callout: none;
