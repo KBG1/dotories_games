@@ -348,13 +348,14 @@ export default function FlipCardGame() {
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto mt-6">
+      <div className="max-w-2xl mx-auto flex justify-center items-center min-h-screen">
         {/* 카드 그리드 */}
         <div
-          className={`grid ${cardGap} mx-auto`}
+          className={`grid ${cardGap}`}
           style={{
             gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
             maxWidth: maxWidth,
+            width: "100%",
           }}
         >
           {gameCards.map((card) => (
