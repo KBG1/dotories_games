@@ -305,9 +305,6 @@ export default function FlipCardGame() {
           align-items: center;
           justify-content: center;
         }
-        .flip-card-front {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
         .flip-card-back {
           transform: rotateY(180deg);
         }
@@ -370,6 +367,8 @@ export default function FlipCardGame() {
           ))}
         </div>
       </div>
+
+      <div className="mt-24"></div>
     </div>
   );
 }
