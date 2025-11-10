@@ -178,36 +178,57 @@ function FlowFreeGame2() {
     [currentPuzzle]
   );
 
-  // 경로 연결 확인
-  const isPathConnected = useCallback(
-    (dot1: [number, number], dot2: [number, number], color: Color): boolean => {
-      const [r1, c1] = dot1;
-      const [r2, c2] = dot2;
+  // BFS로 실제 경로 연결 확인
+  const checkPathConnectionBFS = (
+    dot1: [number, number],
+    dot2: [number, number],
+    color: Color,
+    grid: GameCell[][]
+  ): boolean => {
+    const [startR, startC] = dot1;
+    const [endR, endC] = dot2;
 
-      // 각 점 주변에 같은 색 경로가 있는지 확인
-      const hasPath1 = getAdjacentCells(r1, c1).some(
-        ([r, c]) =>
-          gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
-      );
+    const queue: Array<[number, number]> = [[startR, startC]];
+    const visited = new Set<string>();
+    visited.add(`${startR},${startC}`);
 
-      const hasPath2 = getAdjacentCells(r2, c2).some(
-        ([r, c]) =>
-          gameGrid[r][c].type === "path" && gameGrid[r][c].color === color
-      );
+    while (queue.length > 0) {
+      const [r, c] = queue.shift()!;
 
-      return hasPath1 && hasPath2;
-    },
-    [gameGrid, getAdjacentCells]
-  );
+      // 목적지 도달
+      if (r === endR && c === endC) {
+        return true;
+      }
+
+      // 인접한 셀 탐색
+      const adjacentCells = getAdjacentCells(r, c);
+      for (const [nr, nc] of adjacentCells) {
+        const key = `${nr},${nc}`;
+        if (visited.has(key)) continue;
+
+        const cell = grid[nr][nc];
+        // 같은 색의 경로나 점만 따라가기
+        if (
+          (cell.type === "path" && cell.color === color) ||
+          (cell.type === "dot" && cell.color === color)
+        ) {
+          visited.add(key);
+          queue.push([nr, nc]);
+        }
+      }
+    }
+
+    return false;
+  };
 
   // 게임 완료 체크
   const checkGameCompletion = useCallback(() => {
     if (!puzzleData || !currentPuzzle) return;
 
-    // 모든 페어가 연결되었는지 확인
+    // 모든 페어가 연결되었는지 확인 (BFS 사용)
     const connectedCount = puzzleData.pairs.filter((pair) => {
       const [dot1, dot2] = pair.dots;
-      return isPathConnected(dot1, dot2, pair.color);
+      return checkPathConnectionBFS(dot1, dot2, pair.color, gameGrid);
     }).length;
 
     // 모든 셀이 채워졌는지 확인
@@ -223,7 +244,7 @@ function FlowFreeGame2() {
       setCompletionTime(currentTime);
       setGameCompleted(true);
     }
-  }, [puzzleData, currentPuzzle, gameGrid, currentTime, isPathConnected]);
+  }, [puzzleData, currentPuzzle, gameGrid, currentTime, getAdjacentCells]);
 
   // 이동 처리
   const handleMove = useCallback(
@@ -317,29 +338,24 @@ function FlowFreeGame2() {
   // 터치 이벤트를 위한 좌표 계산
   const getTouchCellPosition = useCallback(
     (touch: React.Touch, gridElement: HTMLElement): [number, number] | null => {
+      if (!currentPuzzle) return null;
+      
       const rect = gridElement.getBoundingClientRect();
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
 
-      const padding = 16;
-      const adjustedX = x - padding;
-      const adjustedY = y - padding;
+      // 그리드의 실제 크기에서 셀 크기 계산 (반응형)
+      const gridSize = currentPuzzle.size;
+      const cellSize = rect.width / gridSize;
 
-      if (adjustedX < 0 || adjustedY < 0) return null;
-
-      const cellSize = 48; // 12 * 4px (w-12 h-12)
-      const gap = 4; // gap-1
-      const totalCellSize = cellSize + gap;
-
-      const col = Math.floor(adjustedX / totalCellSize);
-      const row = Math.floor(adjustedY / totalCellSize);
+      const col = Math.floor(x / cellSize);
+      const row = Math.floor(y / cellSize);
 
       if (
-        currentPuzzle &&
         row >= 0 &&
-        row < currentPuzzle.size &&
+        row < gridSize &&
         col >= 0 &&
-        col < currentPuzzle.size
+        col < gridSize
       ) {
         return [row, col];
       }
@@ -353,8 +369,8 @@ function FlowFreeGame2() {
     const cell = gameGrid[row][col];
 
     if (cell.type === "dot" && cell.color) {
-      // 기존 경로 지우기
-      clearPathsForColor(cell.color);
+      // 미완성 경로 제거 + 현재 색상 경로 지우기를 한 번에 처리
+      clearPathsBeforeStart(cell.color);
 
       setIsDrawing(true);
       setCurrentColor(cell.color);
@@ -362,16 +378,40 @@ function FlowFreeGame2() {
     }
   };
 
-  // 특정 색상의 모든 경로 지우기
-  const clearPathsForColor = (color: Color) => {
-    const newGrid = gameGrid.map((row) =>
-      row.map((cell) => {
-        if (cell.type === "path" && cell.color === color) {
-          return { type: "empty" as CellType };
+  // 새로운 선을 시작하기 전에 경로 정리 (한 번에!)
+  const clearPathsBeforeStart = (startingColor: Color) => {
+    if (!puzzleData) return;
+
+    const newGrid = gameGrid.map(row => row.map(cell => ({ ...cell })));
+
+    // 1. 모든 색상의 경로 확인하고 미완성 경로는 제거
+    puzzleData.pairs.forEach((pair) => {
+      const [dot1, dot2] = pair.dots;
+      
+      // BFS로 두 점이 실제로 연결되어 있는지 확인
+      const isConnected = checkPathConnectionBFS(dot1, dot2, pair.color, newGrid);
+
+      // 연결되지 않은 경로는 제거
+      if (!isConnected) {
+        for (let r = 0; r < newGrid.length; r++) {
+          for (let c = 0; c < newGrid[r].length; c++) {
+            if (newGrid[r][c].type === "path" && newGrid[r][c].color === pair.color) {
+              newGrid[r][c] = { type: "empty" as CellType };
+            }
+          }
         }
-        return cell;
-      })
-    );
+      }
+    });
+
+    // 2. 시작하려는 색상의 경로도 제거 (완성된 경로라도)
+    for (let r = 0; r < newGrid.length; r++) {
+      for (let c = 0; c < newGrid[r].length; c++) {
+        if (newGrid[r][c].type === "path" && newGrid[r][c].color === startingColor) {
+          newGrid[r][c] = { type: "empty" as CellType };
+        }
+      }
+    }
+
     setGameGrid(newGrid);
   };
 
@@ -593,30 +633,7 @@ function FlowFreeGame2() {
         }
       `}</style>
 
-      <div className="max-w-md mx-auto">
-        {/* 상단 HUD */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <button
-            onClick={() => setShowLevelSelect(true)}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-          >
-            ←
-          </button>
-
-          <div className="flex items-center space-x-4">
-            <div className="bg-white rounded-full px-4 py-2 shadow-sm">
-              <span className="text-sm font-semibold text-gray-600">
-                Lv.{selectedLevel}
-              </span>
-            </div>
-            <div className="bg-white rounded-full px-4 py-2 shadow-sm">
-              <span className="text-sm font-semibold text-gray-800">
-                {currentTime}초
-              </span>
-            </div>
-          </div>
-        </div>
-
+      <div className="max-w-md mx-auto mt-6">
         {/* 게임 그리드 */}
         <div className="bg-white rounded-2xl p-4 shadow-lg mb-6">
           <div
@@ -624,7 +641,8 @@ function FlowFreeGame2() {
             data-game-grid
             style={{
               gridTemplateColumns: `repeat(${currentPuzzle?.size || 4}, 1fr)`,
-              width: "fit-content",
+              maxWidth: "min(100%, 400px)",
+              width: "100%",
               touchAction: "none",
             }}
             onMouseUp={handleEnd}
@@ -636,7 +654,7 @@ function FlowFreeGame2() {
               row.map((cell, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className="game-cell w-12 h-12 border border-gray-200 cursor-pointer transition-all duration-150 rounded-lg flex items-center justify-center"
+                  className="game-cell aspect-square border border-gray-200 cursor-pointer transition-all duration-150 rounded-lg flex items-center justify-center"
                   style={{
                     backgroundColor:
                       cell.type === "empty"
