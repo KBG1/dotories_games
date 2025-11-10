@@ -112,25 +112,6 @@ function CrosswordPuzzles() {
         }
       });
 
-      // 추가 방해 글자들 (한글 자음/모음 조합)
-      const distractors = [
-        "가",
-        "나",
-        "다",
-        "라",
-        "마",
-        "바",
-        "사",
-        "아",
-        "자",
-        "차",
-        "카",
-        "타",
-        "파",
-        "하",
-      ];
-      distractors.forEach((letter) => allLetters.add(letter));
-
       // 배열로 변환하고 섞기
       const lettersArray = Array.from(allLetters);
       const shuffled = lettersArray.sort(() => Math.random() - 0.5);
