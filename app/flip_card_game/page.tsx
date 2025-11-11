@@ -106,6 +106,10 @@ export default function FlipCardGame() {
       return;
     }
 
+    // 조건을 통과한 경우에만 오디오 재생
+    const flipCardEffect = new Audio("/sounds/flip_card_effect.mp3");
+    flipCardEffect.play();
+
     const newFlipped = [...flippedCards, cardId];
     setFlippedCards(newFlipped);
 
@@ -384,7 +388,7 @@ export default function FlipCardGame() {
                     height={100}
                     src={card.src}
                     alt={card.name}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
