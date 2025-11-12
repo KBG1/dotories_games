@@ -42,9 +42,9 @@ function CrosswordPuzzles() {
 
   // 난이도별 설정
   const DIFFICULTY_CONFIGS = {
-    easy: { name: "쉬움", size: "5×5", coins: 5 },
-    medium: { name: "보통", size: "6×6", coins: 8 },
-    hard: { name: "어려움", size: "7×7", coins: 12 },
+    easy: { name: "쉬움", coins: 5 },
+    medium: { name: "보통", coins: 8 },
+    hard: { name: "어려움", coins: 12 },
   };
 
   // 퍼즐 로드
@@ -284,13 +284,6 @@ function CrosswordPuzzles() {
                         }`}
                       >
                         {config.name}
-                      </div>
-                      <div
-                        className={`text-md text-gray-600 ${
-                          selectedDifficulty === key ? "text-white" : ""
-                        }`}
-                      >
-                        {config.size} 크기
                       </div>
                       <div className="flex items-center justify-center gap-1 text-orange-600 font-semibold mt-2">
                         <span className="text-lg">🪙</span>
