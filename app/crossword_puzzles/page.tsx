@@ -99,9 +99,9 @@ function CrosswordPuzzles() {
   const generateAvailableLetters = (puzzle: Puzzle) => {
     // solo_words가 있으면 그것을 사용, 없으면 기존 방식
     if (puzzle.solo_words && puzzle.solo_words.length > 0) {
-      // solo_words를 섞어서 12개 선택
+      // solo_words를 섞어서 전체 사용
       const shuffled = [...puzzle.solo_words].sort(() => Math.random() - 0.5);
-      setAvailableLetters(shuffled.slice(0, 12));
+      setAvailableLetters(shuffled);
     } else {
       // 기존 방식 (fallback)
       const allLetters = new Set<string>();
@@ -425,7 +425,7 @@ function CrosswordPuzzles() {
                     key={`${rowIndex}-${colIndex}`}
                     className={`crossword-cell aspect-square border-2 transition-all duration-150 rounded-lg flex items-center justify-center font-bold text-base ${
                       isBlockedCell
-                        ? "border-gray-600 bg-gray-600 cursor-default"
+                        ? "border-gray-500 bg-gray-500 cursor-default"
                         : isCorrect
                         ? "border-green-500 bg-green-100 cursor-pointer"
                         : isBlank

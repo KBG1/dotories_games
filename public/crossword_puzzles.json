@@ -2,259 +2,655 @@
   {
     "puzzle_id": 1,
     "difficulty": "easy",
-    "size": 5,
+    "size": 7,
     "words": [
       {
         "id": 1,
-        "word": "고양이",
+        "word": "고진감래",
         "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
-      },
-      {
-        "id": 2,
-        "word": "양말",
-        "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X"],
-      ["X", "고", "양", "이", "X"],
-      ["X", "X", "말", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X"],
-      ["X", "고", "", "이", "X"],
-      ["X", "X", "", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["양", "말"]
-  },
-  {
-    "puzzle_id": 2,
-    "difficulty": "easy",
-    "size": 5,
-    "words": [
-      {
-        "id": 1,
-        "word": "사과",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
-      },
-      {
-        "id": 2,
-        "word": "과자",
-        "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X"],
-      ["X", "사", "과", "X", "X"],
-      ["X", "X", "자", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X"],
-      ["X", "사", "", "X", "X"],
-      ["X", "X", "", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["과", "자"]
-  },
-  {
-    "puzzle_id": 3,
-    "difficulty": "easy",
-    "size": 5,
-    "words": [
-      {
-        "id": 1,
-        "word": "물고기",
-        "direction": "horizontal",
-        "start_row": 1,
+        "start_row": 0,
         "start_col": 0
       },
       {
         "id": 2,
-        "word": "고래",
+        "word": "고양이",
         "direction": "vertical",
-        "start_row": 1,
-        "start_col": 1
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X"],
-      ["물", "고", "기", "X", "X"],
-      ["X", "래", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X"],
-      ["물", "", "기", "X", "X"],
-      ["X", "", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["고", "래"]
-  },
-  {
-    "puzzle_id": 4,
-    "difficulty": "medium",
-    "size": 6,
-    "words": [
-      {
-        "id": 1,
-        "word": "학교",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
-      },
-      {
-        "id": 2,
-        "word": "교실",
-        "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
+        "start_row": 0,
+        "start_col": 0
       },
       {
         "id": 3,
-        "word": "실내화",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 3
+        "word": "감나무",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 2
       },
       {
         "id": 4,
-        "word": "내구도",
+        "word": "수능",
         "direction": "horizontal",
-        "start_row": 4,
-        "start_col": 2
+        "start_row": 1,
+        "start_col": 5
       },
       {
         "id": 5,
-        "word": "수도",
+        "word": "감독",
         "direction": "vertical",
         "start_row": 3,
-        "start_col": 3
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "학", "교", "X", "X", "X"],
-      ["X", "X", "실", "내", "화", "X"],
-      ["X", "X", "X", "구", "X", "X"],
-      ["X", "X", "수", "도", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "학", "", "X", "X", "X"],
-      ["X", "X", "", "내", "화", "X"],
-      ["X", "X", "X", "", "X", "X"],
-      ["X", "X", "", "도", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["교", "실", "구", "수"]
-  },
-  {
-    "puzzle_id": 5,
-    "difficulty": "medium",
-    "size": 6,
-    "words": [
-      {
-        "id": 1,
-        "word": "음악",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
+        "start_col": 4
       },
       {
-        "id": 2,
-        "word": "악기",
-        "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
-      },
-      {
-        "id": 3,
-        "word": "기차",
+        "id": 6,
+        "word": "이름표",
         "direction": "horizontal",
         "start_row": 4,
-        "start_col": 2
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "음", "악", "X", "X", "X"],
-      ["X", "X", "기", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "X", "기", "차", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "음", "", "X", "X", "X"],
-      ["X", "X", "", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "X", "", "차", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["악", "기", "기"]
-  },
-  {
-    "puzzle_id": 6,
-    "difficulty": "medium",
-    "size": 6,
-    "words": [
-      {
-        "id": 1,
-        "word": "컴퓨터",
-        "direction": "horizontal",
-        "start_row": 2,
-        "start_col": 1
+        "start_col": 0
       },
       {
-        "id": 2,
-        "word": "터미널",
+        "id": 7,
+        "word": "이무기",
         "direction": "vertical",
-        "start_row": 3,
+        "start_row": 4,
+        "start_col": 0
+      },
+      {
+        "id": 8,
+        "word": "표범",
+        "direction": "vertical",
+        "start_row": 4,
         "start_col": 2
       },
       {
-        "id": 3,
-        "word": "널빤지",
+        "id": 9,
+        "word": "독버섯",
         "direction": "horizontal",
-        "start_row": 3,
+        "start_row": 4,
+        "start_col": 4
+      },
+      {
+        "id": 10,
+        "word": "버선발",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 5
+      },
+      {
+        "id": 11,
+        "word": "능어버섯",
+        "direction": "vertical",
+        "start_row": 1,
+        "start_col": 6
+      },
+      {
+        "id": 12,
+        "word": "선발대",
+        "direction": "horizontal",
+        "start_row": 6,
         "start_col": 4
       }
     ],
     "solution": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "컴", "퓨", "터", "X", "X"],
-      ["X", "X", "X", "미", "X", "X"],
-      ["X", "X", "X", "널", "빤", "지"],
-      ["X", "X", "X", "X", "X", "X"]
+      ["고", "진", "감", "래", "X", "X", "X"],
+      ["양", "X", "나", "X", "X", "수", "능"],
+      ["이", "X", "무", "X", "X", "X", "이"],
+      ["X", "X", "X", "X", "감", "X", "버"],
+      ["이", "름", "표", "X", "독", "버", "섯"],
+      ["무", "X", "범", "X", "X", "선", "X"],
+      ["기", "X", "X", "X", "선", "발", "대"]
     ],
     "grid": [
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "X"],
-      ["X", "컴", "", "터", "X", "X"],
-      ["X", "X", "X", "", "X", "X"],
-      ["X", "X", "X", "", "빤", ""],
-      ["X", "X", "X", "X", "X", "X"]
+      ["", "진", "감", "래", "X", "X", "X"],
+      ["양", "X", "나", "X", "X", "수", "능"],
+      ["이", "X", "무", "X", "X", "X", "이"],
+      ["X", "X", "X", "X", "감", "X", "버"],
+      ["이", "름", "", "X", "독", "", "섯"],
+      ["무", "X", "범", "X", "X", "선", "X"],
+      ["기", "X", "X", "X", "", "발", "대"]
     ],
-    "solo_words": ["퓨", "미", "널", "지"]
+    "solo_words": ["고", "버", "선", "표"]
+  },
+  {
+    "puzzle_id": 2,
+    "difficulty": "easy",
+    "size": 7,
+    "words": [
+      {
+        "id": 1,
+        "word": "앙부일구",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 0
+      },
+      {
+        "id": 2,
+        "word": "부모님",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 1
+      },
+      {
+        "id": 3,
+        "word": "수영장",
+        "direction": "horizontal",
+        "start_row": 1,
+        "start_col": 4
+      },
+      {
+        "id": 4,
+        "word": "수선화",
+        "direction": "vertical",
+        "start_row": 1,
+        "start_col": 4
+      },
+      {
+        "id": 5,
+        "word": "손님",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 6,
+        "word": "손수건",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 7,
+        "word": "척화비",
+        "direction": "horizontal",
+        "start_row": 3,
+        "start_col": 3
+      },
+      {
+        "id": 8,
+        "word": "척척박사",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 3
+      },
+      {
+        "id": 9,
+        "word": "건곤일척",
+        "direction": "horizontal",
+        "start_row": 4,
+        "start_col": 0
+      },
+      {
+        "id": 10,
+        "word": "곤지암",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 1
+      },
+      {
+        "id": 11,
+        "word": "박물관",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 3
+      },
+      {
+        "id": 12,
+        "word": "관세",
+        "direction": "vertical",
+        "start_row": 5,
+        "start_col": 5
+      },
+      {
+        "id": 13,
+        "word": "세금",
+        "direction": "horizontal",
+        "start_row": 6,
+        "start_col": 5
+      }
+    ],
+    "solution": [
+      ["앙", "부", "일", "구", "X", "X", "X"],
+      ["X", "모", "X", "X", "수", "영", "장"],
+      ["손", "님", "X", "X", "선", "X", "X"],
+      ["수", "X", "X", "척", "화", "비", "X"],
+      ["건", "곤", "일", "척", "X", "X", "X"],
+      ["X", "지", "X", "박", "물", "관", "X"],
+      ["X", "암", "X", "사", "X", "세", "금"]
+    ],
+    "grid": [
+      ["앙", "", "일", "구", "X", "X", "X"],
+      ["X", "모", "X", "X", "수", "영", "장"],
+      ["", "님", "X", "X", "선", "X", "X"],
+      ["수", "X", "X", "척", "", "비", "X"],
+      ["건", "", "일", "척", "X", "X", "X"],
+      ["X", "지", "X", "박", "물", "관", "X"],
+      ["X", "암", "X", "사", "X", "세", "금"]
+    ],
+    "solo_words": ["부", "손", "곤", "화"]
+  },
+  {
+    "puzzle_id": 3,
+    "difficulty": "easy",
+    "size": 7,
+    "words": [
+      {
+        "id": 1,
+        "word": "배추김치",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 0
+      },
+      {
+        "id": 2,
+        "word": "배멀미",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 0
+      },
+      {
+        "id": 3,
+        "word": "운동",
+        "direction": "horizontal",
+        "start_row": 1,
+        "start_col": 5
+      },
+      {
+        "id": 4,
+        "word": "동아리",
+        "direction": "vertical",
+        "start_row": 1,
+        "start_col": 6
+      },
+      {
+        "id": 5,
+        "word": "미켈란젤로",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 6,
+        "word": "켈리포니아",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 1
+      },
+      {
+        "id": 7,
+        "word": "젤라토",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 3
+      },
+      {
+        "id": 8,
+        "word": "포테토칩",
+        "direction": "horizontal",
+        "start_row": 4,
+        "start_col": 1
+      },
+      {
+        "id": 9,
+        "word": "칩거",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 4
+      },
+      {
+        "id": 10,
+        "word": "거미줄",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 4
+      },
+      {
+        "id": 11,
+        "word": "방아쇠",
+        "direction": "horizontal",
+        "start_row": 6,
+        "start_col": 0
+      }
+    ],
+    "solution": [
+      ["배", "추", "김", "치", "X", "X", "X"],
+      ["멀", "X", "X", "X", "X", "운", "동"],
+      ["미", "켈", "란", "젤", "로", "X", "아"],
+      ["X", "리", "X", "라", "X", "X", "리"],
+      ["X", "포", "테", "토", "칩", "X", "X"],
+      ["X", "니", "X", "X", "거", "미", "줄"],
+      ["방", "아", "쇠", "X", "X", "X", "X"]
+    ],
+    "grid": [
+      ["", "추", "김", "치", "X", "X", "X"],
+      ["멀", "X", "X", "X", "X", "운", "동"],
+      ["미", "", "란", "젤", "로", "X", "아"],
+      ["X", "리", "X", "라", "X", "X", "리"],
+      ["X", "", "테", "토", "칩", "X", "X"],
+      ["X", "니", "X", "X", "", "미", "줄"],
+      ["방", "아", "쇠", "X", "X", "X", "X"]
+    ],
+    "solo_words": ["배", "켈", "포", "거"]
+  },
+  {
+    "puzzle_id": 4,
+    "difficulty": "medium",
+    "size": 7,
+    "words": [
+      {
+        "id": 1,
+        "word": "대한민국",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 3
+      },
+      {
+        "id": 2,
+        "word": "미역국",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 1
+      },
+      {
+        "id": 3,
+        "word": "국가대표",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 6
+      },
+      {
+        "id": 4,
+        "word": "한국방송통신대",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 5,
+        "word": "한복",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 6,
+        "word": "방지턱",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 2
+      },
+      {
+        "id": 7,
+        "word": "턱시도",
+        "direction": "horizontal",
+        "start_row": 4,
+        "start_col": 2
+      },
+      {
+        "id": 8,
+        "word": "시누이",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 3
+      },
+      {
+        "id": 9,
+        "word": "가위",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 5
+      },
+      {
+        "id": 10,
+        "word": "위장",
+        "direction": "vertical",
+        "start_row": 5,
+        "start_col": 6
+      },
+      {
+        "id": 11,
+        "word": "감언이설",
+        "direction": "horizontal",
+        "start_row": 6,
+        "start_col": 1
+      }
+    ],
+    "solution": [
+      ["X", "미", "X", "대", "한", "민", "국"],
+      ["X", "역", "X", "X", "X", "X", "가"],
+      ["한", "국", "방", "송", "통", "신", "대"],
+      ["복", "X", "지", "X", "X", "X", "표"],
+      ["X", "X", "턱", "시", "도", "X", "X"],
+      ["X", "X", "X", "누", "X", "가", "위"],
+      ["X", "감", "언", "이", "설", "X", "장"]
+    ],
+    "grid": [
+      ["X", "", "X", "", "한", "", "국"],
+      ["X", "역", "X", "X", "X", "X", "가"],
+      ["한", "", "방", "송", "통", "신", "대"],
+      ["복", "X", "", "X", "X", "X", "표"],
+      ["X", "X", "턱", "", "도", "X", "X"],
+      ["X", "X", "X", "", "X", "가", ""],
+      ["X", "", "언", "", "설", "X", "장"]
+    ],
+    "solo_words": ["미", "국", "지", "시", "누", "감", "이", "위", "대", "민"]
+  },
+  {
+    "puzzle_id": 5,
+    "difficulty": "medium",
+    "size": 7,
+    "words": [
+      {
+        "id": 1,
+        "word": "에어프라이어",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 0
+      },
+      {
+        "id": 2,
+        "word": "어부지리",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 1
+      },
+      {
+        "id": 3,
+        "word": "라면",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 3
+      },
+      {
+        "id": 4,
+        "word": "어부",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 5
+      },
+      {
+        "id": 5,
+        "word": "이이제이",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 6
+      },
+      {
+        "id": 6,
+        "word": "피리부는사나이",
+        "direction": "horizontal",
+        "start_row": 3,
+        "start_col": 0
+      },
+      {
+        "id": 7,
+        "word": "피부",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 0
+      },
+      {
+        "id": 8,
+        "word": "부지기수",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 2
+      },
+      {
+        "id": 9,
+        "word": "사무용품",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 4
+      },
+      {
+        "id": 10,
+        "word": "인기",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 1
+      }
+    ],
+    "solution": [
+      ["에", "어", "프", "라", "이", "어", "X"],
+      ["X", "부", "X", "면", "X", "부", "X"],
+      ["X", "지", "X", "X", "X", "X", "이"],
+      ["피", "리", "부", "는", "사", "나", "이"],
+      ["부", "X", "지", "X", "무", "X", "제"],
+      ["X", "인", "기", "X", "용", "X", "이"],
+      ["X", "X", "수", "X", "품", "X", "X"]
+    ],
+    "grid": [
+      ["에", "", "프", "라", "이", "", "X"],
+      ["X", "", "X", "", "X", "부", "X"],
+      ["X", "지", "X", "X", "X", "X", "이"],
+      ["피", "", "부", "는", "", "나", "이"],
+      ["부", "X", "", "X", "무", "X", ""],
+      ["X", "인", "", "X", "용", "X", "이"],
+      ["X", "X", "수", "X", "", "X", "X"]
+    ],
+    "solo_words": ["어", "부", "어", "리", "사", "품", "기", "제", "면", "지"]
+  },
+  {
+    "puzzle_id": 6,
+    "difficulty": "medium",
+    "size": 7,
+    "words": [
+      {
+        "id": 1,
+        "word": "인천광역시청",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 1
+      },
+      {
+        "id": 2,
+        "word": "인력거",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 1
+      },
+      {
+        "id": 3,
+        "word": "역사관",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 4
+      },
+      {
+        "id": 4,
+        "word": "청동석",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 6
+      },
+      {
+        "id": 5,
+        "word": "우거지",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 6,
+        "word": "우유부단",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 0
+      },
+      {
+        "id": 7,
+        "word": "지하수",
+        "direction": "vertical",
+        "start_row": 2,
+        "start_col": 2
+      },
+      {
+        "id": 8,
+        "word": "관람석",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 4
+      },
+      {
+        "id": 9,
+        "word": "수청",
+        "direction": "horizontal",
+        "start_row": 4,
+        "start_col": 2
+      },
+      {
+        "id": 10,
+        "word": "청계천",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 3
+      },
+      {
+        "id": 11,
+        "word": "고구마",
+        "direction": "vertical",
+        "start_row": 4,
+        "start_col": 5
+      },
+      {
+        "id": 12,
+        "word": "단풍",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 0
+      },
+      {
+        "id": 13,
+        "word": "풍선",
+        "direction": "vertical",
+        "start_row": 5,
+        "start_col": 1
+      },
+      {
+        "id": 14,
+        "word": "천고마비",
+        "direction": "horizontal",
+        "start_row": 6,
+        "start_col": 3
+      }
+    ],
+    "solution": [
+      ["X", "인", "천", "광", "역", "시", "청"],
+      ["X", "력", "X", "X", "사", "X", "동"],
+      ["우", "거", "지", "X", "관", "람", "석"],
+      ["유", "X", "하", "X", "X", "X", "X"],
+      ["부", "X", "수", "청", "X", "고", "X"],
+      ["단", "풍", "X", "계", "X", "구", "X"],
+      ["X", "선", "X", "천", "고", "마", "비"]
+    ],
+    "grid": [
+      ["X", "", "천", "광", "", "시", ""],
+      ["X", "력", "X", "X", "사", "X", "동"],
+      ["우", "", "", "X", "", "람", ""],
+      ["유", "X", "하", "X", "X", "X", "X"],
+      ["부", "X", "수", "청", "X", "고", "X"],
+      ["단", "", "X", "계", "X", "", "X"],
+      ["X", "선", "X", "", "고", "마", "비"]
+    ],
+    "solo_words": ["인", "역", "관", "석", "거", "지", "청", "천", "구", "풍"]
   },
   {
     "puzzle_id": 7,
@@ -263,73 +659,142 @@
     "words": [
       {
         "id": 1,
-        "word": "한국어",
-        "direction": "horizontal",
-        "start_row": 1,
+        "word": "방사능",
+        "direction": "vertical",
+        "start_row": 0,
         "start_col": 1
       },
       {
         "id": 2,
-        "word": "국민",
+        "word": "고육지계",
         "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
+        "start_row": 0,
+        "start_col": 3
       },
       {
         "id": 3,
-        "word": "민족",
+        "word": "마이동풍",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 5
+      },
+      {
+        "id": 4,
+        "word": "사교육",
         "direction": "horizontal",
+        "start_row": 1,
+        "start_col": 1
+      },
+      {
+        "id": 5,
+        "word": "이자",
+        "direction": "horizontal",
+        "start_row": 1,
+        "start_col": 5
+      },
+      {
+        "id": 6,
+        "word": "제방",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 0
+      },
+      {
+        "id": 7,
+        "word": "계절풍",
+        "direction": "horizontal",
+        "start_row": 3,
+        "start_col": 3
+      },
+      {
+        "id": 8,
+        "word": "절구",
+        "direction": "vertical",
+        "start_row": 3,
+        "start_col": 4
+      },
+      {
+        "id": 9,
+        "word": "방송국",
+        "direction": "horizontal",
+        "start_row": 4,
+        "start_col": 0
+      },
+      {
+        "id": 10,
+        "word": "송신기",
+        "direction": "vertical",
         "start_row": 4,
         "start_col": 1
       },
       {
-        "id": 4,
-        "word": "족발",
+        "id": 11,
+        "word": "자식",
         "direction": "vertical",
-        "start_row": 4,
-        "start_col": 2
+        "start_row": 5,
+        "start_col": 3
       },
       {
-        "id": 5,
-        "word": "발전",
+        "id": 12,
+        "word": "전송",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 5
+      },
+      {
+        "id": 13,
+        "word": "송구",
+        "direction": "vertical",
+        "start_row": 5,
+        "start_col": 6
+      },
+      {
+        "id": 14,
+        "word": "기사식당",
         "direction": "horizontal",
         "start_row": 6,
-        "start_col": 4
-      },
-      {
-        "id": 6,
-        "word": "부전자전",
-        "direction": "vertical",
-        "start_row": 3,
-        "start_col": 5
-      },
-      {
-        "id": 7,
-        "word": "부자",
-        "direction": "horizontal",
-        "start_row": 3,
-        "start_col": 5
+        "start_col": 1
       }
     ],
     "solution": [
-      ["X", "X", "X", "X", "X", "X", "X"],
-      ["X", "한", "국", "어", "X", "X", "X"],
-      ["X", "X", "민", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "부", "자"],
-      ["X", "민", "족", "X", "X", "전", "X"],
-      ["X", "X", "발", "X", "X", "자", "X"],
-      ["X", "X", "X", "X", "발", "전", "X"]
+      ["X", "방", "X", "고", "X", "마", "X"],
+      ["X", "사", "교", "육", "X", "이", "자"],
+      ["X", "능", "X", "지", "X", "동", "X"],
+      ["제", "X", "X", "계", "절", "풍", "X"],
+      ["방", "송", "국", "X", "구", "X", "X"],
+      ["X", "신", "X", "자", "X", "전", "송"],
+      ["X", "기", "사", "식", "당", "X", "구"]
     ],
     "grid": [
-      ["X", "X", "X", "X", "X", "X", "X"],
-      ["X", "한", "", "어", "X", "X", "X"],
-      ["X", "X", "", "X", "X", "X", "X"],
-      ["X", "X", "X", "X", "X", "부", ""],
-      ["X", "", "족", "X", "X", "", "X"],
-      ["X", "X", "", "X", "X", "", "X"],
-      ["X", "X", "X", "X", "", "전", "X"]
+      ["X", "", "X", "", "X", "", "X"],
+      ["X", "", "교", "", "X", "", "자"],
+      ["X", "", "X", "", "X", "", "X"],
+      ["제", "X", "X", "", "", "", "X"],
+      ["", "", "국", "X", "", "X", "X"],
+      ["X", "", "X", "", "X", "", ""],
+      ["X", "", "사", "", "당", "X", "구"]
     ],
-    "solo_words": ["국", "민", "민", "발", "전", "자", "자", "발"]
+    "solo_words": [
+      "방",
+      "사",
+      "능",
+      "고",
+      "육",
+      "지",
+      "계",
+      "마",
+      "이",
+      "동",
+      "풍",
+      "절",
+      "구",
+      "송",
+      "신",
+      "자",
+      "전",
+      "식",
+      "방"
+    ]
   },
   {
     "puzzle_id": 8,
@@ -338,147 +803,267 @@
     "words": [
       {
         "id": 1,
-        "word": "운동장",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
+        "word": "유비무환",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 0
       },
       {
         "id": 2,
-        "word": "동물원",
+        "word": "된장",
         "direction": "vertical",
-        "start_row": 1,
+        "start_row": 0,
         "start_col": 2
       },
       {
         "id": 3,
-        "word": "긴팔원숭이",
+        "word": "오레오",
+        "direction": "horizontal",
+        "start_row": 0,
+        "start_col": 4
+      },
+      {
+        "id": 4,
+        "word": "오대양육대주",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 4
+      },
+      {
+        "id": 5,
+        "word": "오비이락",
+        "direction": "vertical",
+        "start_row": 0,
+        "start_col": 6
+      },
+      {
+        "id": 6,
+        "word": "비무장지대",
+        "direction": "horizontal",
+        "start_row": 1,
+        "start_col": 0
+      },
+      {
+        "id": 7,
+        "word": "양송이",
+        "direction": "horizontal",
+        "start_row": 2,
+        "start_col": 4
+      },
+      {
+        "id": 8,
+        "word": "환풍기",
         "direction": "horizontal",
         "start_row": 3,
         "start_col": 0
       },
       {
-        "id": 4,
-        "word": "숭례문",
+        "id": 9,
+        "word": "풍력발전",
         "direction": "vertical",
         "start_row": 3,
+        "start_col": 1
+      },
+      {
+        "id": 10,
+        "word": "재발",
+        "direction": "horizontal",
+        "start_row": 5,
+        "start_col": 0
+      },
+      {
+        "id": 11,
+        "word": "호주머니",
+        "direction": "horizontal",
+        "start_row": 5,
         "start_col": 3
       },
       {
-        "id": 5,
-        "word": "문지기",
-        "direction": "horizontal",
+        "id": 12,
+        "word": "호미",
+        "direction": "vertical",
         "start_row": 5,
         "start_col": 3
       },
       {
-        "id": 6,
-        "word": "아기",
-        "direction": "vertical",
-        "start_row": 4,
-        "start_col": 5
-      }
-    ],
-    "solution": [
-      ["X", "X", "X", "X", "X", "X", "X"],
-      ["X", "운", "동", "장", "X", "X", "X"],
-      ["X", "X", "물", "X", "X", "X", "X"],
-      ["긴", "팔", "원", "숭", "이", "X", "X"],
-      ["X", "X", "X", "례", "X", "아", "X"],
-      ["X", "X", "X", "문", "지", "기", "X"],
-      ["X", "X", "X", "X", "X", "X", "X"]
-    ],
-    "grid": [
-      ["X", "X", "X", "X", "X", "X", "X"],
-      ["X", "운", "", "장", "X", "X", "X"],
-      ["X", "X", "", "X", "X", "X", "X"],
-      ["", "", "원", "", "이", "X", "X"],
-      ["X", "X", "X", "", "X", "", "X"],
-      ["X", "X", "X", "문", "", "기", "X"],
-      ["X", "X", "X", "X", "X", "X", "X"]
-    ],
-    "solo_words": ["긴", "팔", "동", "물", "숭", "례", "지", "아"]
-  },
-  {
-    "puzzle_id": 9,
-    "difficulty": "hard",
-    "size": 7,
-    "words": [
-      {
-        "id": 1,
-        "word": "스마트폰",
-        "direction": "horizontal",
-        "start_row": 1,
-        "start_col": 1
-      },
-      {
-        "id": 2,
-        "word": "마음씨",
-        "direction": "vertical",
-        "start_row": 1,
-        "start_col": 2
-      },
-      {
-        "id": 3,
-        "word": "씨앗",
-        "direction": "horizontal",
-        "start_row": 3,
-        "start_col": 2
-      },
-      {
-        "id": 4,
-        "word": "한우",
-        "direction": "vertical",
-        "start_row": 4,
-        "start_col": 1
-      },
-      {
-        "id": 5,
-        "word": "우유부단",
-        "direction": "horizontal",
-        "start_row": 5,
-        "start_col": 1
-      },
-      {
-        "id": 6,
-        "word": "유자",
+        "id": 13,
+        "word": "니체",
         "direction": "vertical",
         "start_row": 5,
-        "start_col": 2
-      },
-      {
-        "id": 7,
-        "word": "단소",
-        "direction": "vertical",
-        "start_row": 5,
-        "start_col": 4
-      },
-      {
-        "id": 8,
-        "word": "아이스크림",
-        "direction": "vertical",
-        "start_row": 2,
         "start_col": 6
       }
     ],
     "solution": [
-      ["X", "버", "X", "X", "X", "X", "X"],
-      ["X", "스", "마", "트", "폰", "X", "X"],
-      ["X", "X", "음", "X", "X", "X", "아"],
-      ["X", "X", "씨", "앗", "X", "X", "이"],
-      ["X", "한", "X", "X", "X", "X", "스"],
-      ["X", "우", "유", "부", "단", "X", "크"],
-      ["X", "X", "자", "X", "소", "X", "림"]
+      ["유", "X", "된", "X", "오", "레", "오"],
+      ["비", "무", "장", "지", "대", "X", "비"],
+      ["무", "X", "X", "X", "양", "송", "이"],
+      ["환", "풍", "기", "X", "육", "X", "락"],
+      ["X", "력", "X", "X", "대", "X", "X"],
+      ["재", "발", "X", "호", "주", "머", "니"],
+      ["X", "전", "X", "미", "X", "X", "체"]
     ],
     "grid": [
-      ["X", "", "X", "X", "X", "X", "X"],
-      ["X", "스", "", "트", "폰", "X", "X"],
-      ["X", "X", "음", "X", "X", "X", "아"],
-      ["X", "X", "", "", "X", "X", "이"],
-      ["X", "", "X", "X", "X", "X", ""],
-      ["X", "우", "", "부", "", "X", ""],
-      ["X", "X", "", "X", "", "X", ""]
+      ["", "X", "", "X", "", "레", ""],
+      ["", "무", "", "지", "", "X", ""],
+      ["", "X", "X", "X", "", "", "이"],
+      ["", "", "기", "X", "", "X", ""],
+      ["X", "", "X", "X", "", "X", "X"],
+      ["재", "", "X", "", "주", "머", ""],
+      ["X", "", "X", "미", "X", "X", "체"]
     ],
-    "solo_words": ["마", "씨", "앗", "한", "유", "자", "단", "소", "스", "크", "림", "버"]
-  }
-]
+    "solo_words": [
+      "유",
+      "비",
+      "무",
+      "환",
+      "풍",
+      "력",
+      "발",
+      "전",
+      "호",
+      "니",
+      "오",
+      "대",
+      "양",
+      "육",
+      "대",
+      "오",
+      "락",
+      "된",
+      "장",
+      "비",
+       "송"
+     ]
+   },
+   {
+     "puzzle_id": 9,
+     "difficulty": "hard",
+     "size": 7,
+     "words": [
+       {
+         "id": 1,
+         "word": "냉동식품",
+         "direction": "horizontal",
+         "start_row": 0,
+         "start_col": 0
+       },
+       {
+         "id": 2,
+         "word": "동물",
+         "direction": "vertical",
+         "start_row": 0,
+         "start_col": 1
+       },
+       {
+         "id": 3,
+         "word": "품새",
+         "direction": "vertical",
+         "start_row": 0,
+         "start_col": 3
+       },
+       {
+         "id": 4,
+         "word": "냉기",
+         "direction": "horizontal",
+         "start_row": 0,
+         "start_col": 5
+       },
+       {
+         "id": 5,
+         "word": "기네스북",
+         "direction": "vertical",
+         "start_row": 0,
+         "start_col": 6
+       },
+       {
+         "id": 6,
+         "word": "사원",
+         "direction": "vertical",
+         "start_row": 2,
+         "start_col": 2
+       },
+       {
+         "id": 7,
+         "word": "버스",
+         "direction": "horizontal",
+         "start_row": 2,
+         "start_col": 5
+       },
+       {
+         "id": 8,
+         "word": "긴팔원숭이",
+         "direction": "horizontal",
+         "start_row": 3,
+         "start_col": 0
+       },
+       {
+         "id": 9,
+         "word": "숭례문",
+         "direction": "vertical",
+         "start_row": 3,
+         "start_col": 3
+       },
+       {
+         "id": 10,
+         "word": "공방",
+         "direction": "vertical",
+         "start_row": 5,
+         "start_col": 0
+       },
+       {
+         "id": 11,
+         "word": "우문현답",
+         "direction": "horizontal",
+         "start_row": 5,
+         "start_col": 2
+       },
+       {
+         "id": 12,
+         "word": "우연",
+         "direction": "vertical",
+         "start_row": 5,
+         "start_col": 2
+       },
+       {
+         "id": 13,
+         "word": "답사",
+         "direction": "vertical",
+         "start_row": 5,
+         "start_col": 5
+       },
+       {
+         "id": 14,
+         "word": "방패연",
+         "direction": "horizontal",
+         "start_row": 6,
+         "start_col": 0
+       },
+       {
+         "id": 15,
+         "word": "사장",
+         "direction": "horizontal",
+         "start_row": 6,
+         "start_col": 5
+       }
+     ],
+     "solution": [
+       ["냉", "동", "식", "품", "X", "냉", "기"],
+       ["X", "물", "X", "새", "X", "X", "네"],
+       ["X", "X", "사", "X", "X", "버", "스"],
+       ["긴", "팔", "원", "숭", "이", "X", "북"],
+       ["X", "X", "X", "례", "X", "X", "X"],
+       ["공", "X", "우", "문", "현", "답", "X"],
+       ["방", "패", "연", "X", "X", "사", "장"]
+     ],
+     "grid": [
+       ["냉", "", "식", "", "X", "", "기"],
+       ["X", "", "X", "", "X", "X", ""],
+       ["X", "X", "", "X", "X", "버", ""],
+       ["", "팔", "", "", "", "X", ""],
+       ["X", "X", "X", "", "X", "X", "X"],
+       ["공", "X", "", "", "", "", "X"],
+       ["", "패", "", "X", "X", "사", ""]
+     ],
+     "solo_words": ["동", "물", "품", "새", "네", "스", "사", "원", "숭", "례", "문", "우", "연", "답", "긴", "이", "현", "장", "방", "냉", "북"]
+   }
+ ]
