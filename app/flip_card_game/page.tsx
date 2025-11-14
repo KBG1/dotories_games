@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import data from "@/public/flip_card_game.json";
 import Image from "next/image";
 
@@ -35,6 +35,22 @@ export default function FlipCardGame() {
   const [showingCards, setShowingCards] = useState(false); // 카드 보여주기
   const [countdown, setCountdown] = useState(5); // 카운트다운
 
+  const gameBgmRef = useRef<HTMLAudioElement | null>(null);
+
+  // Audio 초기화
+  useEffect(() => {
+    gameBgmRef.current = new Audio("/sounds/flip_card/flip_card_bgm.mp3");
+    gameBgmRef.current.loop = true;
+    gameBgmRef.current.volume = 0.3;
+    
+    return () => {
+      if (gameBgmRef.current) {
+        gameBgmRef.current.pause();
+        gameBgmRef.current = null;
+      }
+    };
+  }, []);
+
   // 난이도별 설정
   const DIFFICULTY_CONFIGS = {
     easy: { name: "쉬움", pairs: 4, cards: 8, coin: 5 },
@@ -58,6 +74,11 @@ export default function FlipCardGame() {
       gameData.difficulty[difficulty as keyof typeof gameData.difficulty];
     const selectedCards = gameData.cards.slice(0, pairCount * 2);
     const shuffled = shuffleCards(selectedCards);
+    
+    if (gameBgmRef.current) {
+      gameBgmRef.current.play();
+    }
+    
     setGameCards(shuffled);
     setFlippedCards([]);
     setMatchedCards([]);
@@ -107,7 +128,7 @@ export default function FlipCardGame() {
     }
 
     // 조건을 통과한 경우에만 오디오 재생
-    const flipCardEffect = new Audio("/sounds/flip_card_effect.mp3");
+    const flipCardEffect = new Audio("/sounds/flip_card/flip_card_effect.mp3");
     flipCardEffect.play();
 
     const newFlipped = [...flippedCards, cardId];
@@ -254,6 +275,9 @@ export default function FlipCardGame() {
 
   // 게임 완료 화면
   if (gameCompleted) {
+    if (gameBgmRef.current) {
+      gameBgmRef.current.pause();
+    }
     return (
       <div
         className="min-h-screen flex items-center justify-center p-4"
