@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 interface Word {
   id: number;
   word: string;
+  hint: string;
   direction: "horizontal" | "vertical";
   start_row: number;
   start_col: number;
@@ -39,6 +40,8 @@ function CrosswordPuzzles() {
   const [cellToLetterIndex, setCellToLetterIndex] = useState<
     Map<string, number>
   >(new Map());
+  const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [showHint, setShowHint] = useState(false);
 
   // 난이도별 설정
   const DIFFICULTY_CONFIGS = {
@@ -79,6 +82,8 @@ function CrosswordPuzzles() {
     setSelectedCell(null);
     setUsedLetters(new Set());
     setCellToLetterIndex(new Map());
+    setSelectedWord(null);
+    setShowHint(false);
   };
 
   // 사용자 그리드 초기화
@@ -118,8 +123,16 @@ function CrosswordPuzzles() {
       const shuffled = lettersArray.sort(() => Math.random() - 0.5);
 
       // 12개 글자로 제한 (2줄 × 6개)
-      setAvailableLetters(shuffled.slice(0, 12));
+      setAvailableLetters(shuffled);
     }
+  };
+
+  // 시작 좌표인지 확인
+  const isStartCell = (row: number, col: number) => {
+    if (!currentPuzzle) return null;
+    return currentPuzzle.words.find(
+      (word) => word.start_row === row && word.start_col === col
+    );
   };
 
   // 셀 클릭 핸들러
@@ -130,6 +143,16 @@ function CrosswordPuzzles() {
     // X가 아닌 모든 칸 선택 가능 (빈칸이거나 이미 채워진 글자)
     if (originalCell !== "X") {
       setSelectedCell({ row, col });
+      
+      // 시작 좌표인지 확인
+      const wordAtStart = isStartCell(row, col);
+      if (wordAtStart) {
+        setSelectedWord(wordAtStart);
+        setShowHint(false); // 힌트는 초기화
+      } else {
+        setSelectedWord(null);
+        setShowHint(false);
+      }
     }
   };
 
@@ -231,6 +254,8 @@ function CrosswordPuzzles() {
       setSelectedCell(null);
       setUsedLetters(new Set());
       setCellToLetterIndex(new Map());
+      setSelectedWord(null);
+      setShowHint(false);
     }
   };
   // 난이도 선택 화면
@@ -413,10 +438,12 @@ function CrosswordPuzzles() {
                   isBlank &&
                   isCorrectAnswer(rowIndex, colIndex, userCell);
 
+                const wordAtCell = isStartCell(rowIndex, colIndex);
+                
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
-                    className={`crossword-cell aspect-square border-2 transition-all duration-150 rounded-lg flex items-center justify-center font-bold text-base ${
+                    className={`crossword-cell aspect-square border-2 transition-all duration-150 rounded-lg flex items-center justify-center font-bold text-base relative ${
                       isBlockedCell
                         ? "border-gray-500 bg-gray-500 cursor-default"
                         : isCorrect
@@ -431,6 +458,13 @@ function CrosswordPuzzles() {
                     }`}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                   >
+                    {/* 시작 좌표 번호 표시 */}
+                    {wordAtCell && (
+                      <span className="absolute top-[0%] left-[5%] text-xs text-purple-600 font-bold">
+                        {wordAtCell.id}
+                      </span>
+                    )}
+                    
                     {isBlockedCell ? (
                       ""
                     ) : isFixed ? (
@@ -489,6 +523,37 @@ function CrosswordPuzzles() {
           </div>
         </div>
 
+        {/* 힌트 영역 */}
+        {selectedWord && (
+          <div className="bg-purple-50 rounded-xl p-4 mb-3 border-2 border-purple-200">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-purple-600 bg-purple-200 rounded-full w-5 h-5 flex items-center justify-center">
+                  {selectedWord.id}
+                </span>
+                <span className="text-sm font-semibold text-gray-700">
+                  {selectedWord.direction === "horizontal" ? "가로" : "세로"}
+                </span>
+              </div>
+              <button
+                onClick={() => setShowHint(!showHint)}
+                className="px-4 py-2 bg-purple-500 text-white rounded-lg text-sm font-semibold hover:bg-purple-600 transition-colors"
+              >
+                {showHint ? "힌트 숨기기" : "💡 힌트 보기"}
+              </button>
+            </div>
+            
+            {showHint && (
+              <div className="p-3 bg-white rounded-lg border border-purple-200">
+                <p className="text-sm text-gray-600 mb-1">💬 힌트</p>
+                <p className="text-base text-gray-700">
+                  {selectedWord.hint}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 삭제 버튼 */}
         <button
           onClick={handleLetterDelete}
@@ -502,7 +567,7 @@ function CrosswordPuzzles() {
             selectedCell &&
             (currentPuzzle?.grid[selectedCell.row][selectedCell.col] === "" ||
               currentPuzzle?.grid[selectedCell.row][selectedCell.col] === "?")
-              ? "bg-red-400 text-white hover:bg-red-200"
+              ? "bg-red-400 text-white hover:bg-red-500"
               : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
         >
@@ -510,7 +575,7 @@ function CrosswordPuzzles() {
         </button>
         <button
           onClick={handleReset}
-          className="w-full mt-3 py-3 rounded-xl font-semibold transition-colors bg-blue-400 text-white hover:bg-blue-500"
+          className="w-full mt-3 py-3 rounded-xl font-semibold transition-colors bg-purple-400 text-white hover:bg-purple-500"
         >
           🔄 전체 초기화
         </button>

@@ -34,6 +34,7 @@ export default function FlipCardGame() {
   const [showPrepareModal, setShowPrepareModal] = useState(false); // 안내 모달
   const [showingCards, setShowingCards] = useState(false); // 카드 보여주기
   const [countdown, setCountdown] = useState(5); // 카운트다운
+  const [moveCount, setMoveCount] = useState(0);
 
   const gameBgmRef = useRef<HTMLAudioElement | null>(null);
 
@@ -88,6 +89,7 @@ export default function FlipCardGame() {
     setShowPrepareModal(true); // 먼저 안내 모달 표시
     setShowingCards(false);
     setCountdown(3);
+    setMoveCount(0);
   };
 
   // 안내 모달 표시 후 카드 보여주기 시작
@@ -154,6 +156,7 @@ export default function FlipCardGame() {
           setIsChecking(false);
         }, 1000);
       }
+      setMoveCount((prev) => prev + 1);
     }
   };
 
@@ -289,6 +292,9 @@ export default function FlipCardGame() {
           <p className="text-lg mb-6 text-gray-600">
             모든 카드를 매칭했습니다!
           </p>
+          <p className="text-lg mb-6 text-gray-600">
+            시도 횟수 : {moveCount}
+          </p>
           <div className="space-y-3">
             <button
               onClick={() => setShowDifficultySelect(true)}
@@ -420,7 +426,6 @@ export default function FlipCardGame() {
           ))}
         </div>
       </div>
-
       <div className="mt-12"></div>
     </div>
   );
