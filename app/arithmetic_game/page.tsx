@@ -189,6 +189,7 @@ export default function ArithmeticGame() {
     setGameCompleted(false);
     setPreviousAnswer(null);
     setShowDifficultySelect(false);
+    setInCorrectCount(0);
 
     // 첫 문제 생성
     const question = generateQuestion(diff, null);
